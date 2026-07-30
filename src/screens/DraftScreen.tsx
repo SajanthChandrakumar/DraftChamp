@@ -77,26 +77,30 @@ export function DraftScreen({ leagueData }: DraftScreenProps) {
 
   return (
     <div className="draft-screen">
-      <RoundIndicator round={state.round} />
-      <ComboReveal combo={state.currentCombo} teamName={teamName} onSpin={handleSpin} />
-      <Pitch
-        formationId={state.formationId}
-        filledSlots={state.filledSlots}
-        eligibleSlotIds={eligibleSlotIds}
-        onSlotTap={handleSlotTap}
-      />
-      {state.phase === "drafting" && (
-        <div className="draft-screen__squad">
-          {available.map((player) => (
-            <PlayerCard
-              key={player.id}
-              player={player}
-              isSelected={player.id === state.selectedPlayerId}
-              onTap={() => handleSelectPlayer(player.id)}
-            />
-          ))}
+      <div className="draft-screen__board">
+        <Pitch
+          formationId={state.formationId}
+          filledSlots={state.filledSlots}
+          eligibleSlotIds={eligibleSlotIds}
+          onSlotTap={handleSlotTap}
+        />
+        <div className="draft-screen__side">
+          <RoundIndicator round={state.round} />
+          <ComboReveal combo={state.currentCombo} teamName={teamName} onSpin={handleSpin} />
+          {state.phase === "drafting" && (
+            <div className="draft-screen__squad">
+              {available.map((player) => (
+                <PlayerCard
+                  key={player.id}
+                  player={player}
+                  isSelected={player.id === state.selectedPlayerId}
+                  onTap={() => handleSelectPlayer(player.id)}
+                />
+              ))}
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 }
