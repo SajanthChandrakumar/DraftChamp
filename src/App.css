@@ -491,3 +491,245 @@
   border: 1px solid var(--border);
   color: var(--text);
 }
+
+.result-screen__record-chase {
+  max-width: 42ch;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.result-screen__record-chase--achieved {
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+/* ---------- Mode select ---------- */
+
+.mode-select {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100svh;
+  gap: var(--space-4);
+  padding: var(--space-5);
+  text-align: center;
+  animation: rise-in 0.4s ease-out both;
+}
+
+.mode-select__eyebrow {
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.mode-select__title {
+  font-size: clamp(28px, 5vw, 40px);
+}
+
+.mode-select__options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-3);
+  max-width: 760px;
+}
+
+.mode-select__option {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-4);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  text-align: left;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.mode-select__option:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.mode-select__option-label {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.mode-select__option-description {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* ---------- Setup pickers (record / club) shared with formation-picker ---------- */
+
+.record-picker,
+.club-picker {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.record-picker__label,
+.club-picker__label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.record-picker__options,
+.club-picker__options {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 560px;
+}
+
+.record-picker__option,
+.club-picker__option {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  text-align: left;
+  font-size: 13px;
+}
+
+.record-picker__option--selected,
+.club-picker__option--selected {
+  border-color: var(--accent);
+}
+
+.record-picker__option-label {
+  font-weight: 600;
+}
+
+.record-picker__option-holder {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.formation-picker__back {
+  margin-top: var(--space-2);
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 13px;
+  text-decoration: underline;
+}
+
+/* ---------- Draft screen banners (record chase / budget) ---------- */
+
+.draft-screen__banner {
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  font-size: 13px;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.draft-screen__banner--budget {
+  color: var(--text);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.player-card__cost {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.player-card:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+/* ---------- Duel (head-to-head) ---------- */
+
+.duel-turn-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.duel-turn-banner__side {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.duel-turn-banner__side--a {
+  color: var(--accent);
+}
+
+.duel-turn-banner__side--b {
+  color: var(--turf-500);
+}
+
+.duel-turn-banner__scores {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.reveal-skip-button {
+  align-self: flex-start;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border);
+  background: none;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.duel-result {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.duel-result__side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.duel-result__label {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.duel-result__record {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.duel-result__points {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.duel-result__vs {
+  color: var(--text-muted);
+  font-size: 13px;
+}

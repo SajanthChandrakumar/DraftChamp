@@ -67,6 +67,23 @@ describe("simulateSeason", () => {
     }
   });
 
+  it("produces plausible, non-negative goal figures alongside the record", () => {
+    for (const overall of [40, 60, 75, 90, 99]) {
+      const record = simulateSeason(buildXi(overall), "4-3-3");
+      expect(record.goalsFor).toBeGreaterThan(0);
+      expect(record.goalsConceded).toBeGreaterThan(0);
+      expect(record.topScorerGoals).toBeGreaterThan(0);
+      expect(record.topScorerGoals).toBeLessThanOrEqual(record.goalsFor);
+    }
+  });
+
+  it("gives a stronger attack more goals-for than a weak one", () => {
+    const strong = simulateSeason(buildXi(95), "4-3-3");
+    const weak = simulateSeason(buildXi(45), "4-3-3");
+    expect(strong.goalsFor).toBeGreaterThan(weak.goalsFor);
+    expect(strong.goalsConceded).toBeLessThan(weak.goalsConceded);
+  });
+
   it("reaches the near-perfect band only for a small fraction of a realistic squad-quality distribution", () => {
     // Real player pools have far more average players than world-class ones,
     // so skew the sampled overalls toward the lower end (squaring a uniform

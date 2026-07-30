@@ -19,6 +19,8 @@ export interface Player {
   overall: number; // 0-99 headline rating
   age: number;
   shirtNumber?: number;
+  /** Transfer market value in EUR, if the data source provides it. Used by Budget Draft. */
+  marketValue?: number;
   attributes: {
     pace: number;
     shooting: number;
