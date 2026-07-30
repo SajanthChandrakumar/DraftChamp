@@ -535,6 +535,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: var(--space-3);
+  width: 100%;
   max-width: 760px;
 }
 
