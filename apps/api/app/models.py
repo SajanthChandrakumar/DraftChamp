@@ -110,6 +110,10 @@ class RecordInfo(BaseModel):
     value: int
     holder: str
     season: str
+    strength_group: Literal["overall", "attack", "defense"] = Field(
+        serialization_alias="strengthGroup"
+    )
+    required_strength: float = Field(serialization_alias="requiredStrength")
     lower_is_better: bool = Field(default=False, serialization_alias="lowerIsBetter")
 
     model_config = {"populate_by_name": True}

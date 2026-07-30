@@ -159,11 +159,14 @@ class TestSimulation:
             assert season.wins + season.draws + season.losses == 38
 
     def test_top_band_stays_rare_across_a_realistic_quality_spread(self):
+        # 40..91 mirrors this dataset's real overall range (no real player
+        # exceeds 91) — sampling up to 99 would test squads the game can
+        # never actually produce.
         rng = seeded_rng(12345)
         samples = 500
         legendary = 0
         for _ in range(samples):
-            overall = 40 + math.floor(rng() ** 2 * 60)
+            overall = 40 + math.floor(rng() ** 2 * 52)
             if simulate_season(build_xi(overall), "4-3-3").tier == "Legendary":
                 legendary += 1
         assert legendary / samples < 0.1

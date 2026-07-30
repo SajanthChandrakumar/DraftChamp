@@ -27,6 +27,13 @@ LEAGUE_SIZE = 20
 # real decision rather than "always take the highest overall".
 OUT_OF_POSITION_FACTOR = 0.8
 
+# How sharply attack/defense strength swings goals for/against. Defense is
+# steeper than attack: within this dataset's rating ceiling (~91 overall), a
+# max-strength defense needs a bigger swing to reach the sub-15-conceded
+# record than a max-strength attack needs to reach the 106-scored one.
+ATTACK_GOAL_COEF = 1.85
+DEFENSE_GOAL_COEF = 2.0
+
 
 def js_round(value: float) -> int:
     """JavaScript's Math.round: halves go toward +Infinity."""
@@ -42,14 +49,63 @@ class AnchorRow:
 
 
 # Ordered low-to-high; the highest row whose min_strength <= squad strength wins.
+#
+# The top two rows are calibrated against this dataset's actual rating ceiling
+# (the best real player at any position tops out at 91 overall, so an XI's
+# average can realistically reach only the high 80s/~90 — never the 92+ a
+# 99-point rating scale would suggest). Row 89 is tuned so the single best
+# legal XI obtainable from the real dataset (verified by search) lands here
+# and, with favourable jitter, can clear every one of the six PL records at
+# once — without making merely-great real single-season squads (e.g. a
+# best-XI from an actual title-winning club-season) sweep them for free.
 ANCHORS: list[AnchorRow] = [
     AnchorRow(0, 3, 8, 27),
     AnchorRow(55, 8, 10, 20),
     AnchorRow(65, 14, 12, 12),
     AnchorRow(75, 20, 10, 8),
-    AnchorRow(85, 27, 8, 3),
-    AnchorRow(92, 34, 3, 1),  # near-38-0-0 band
+    AnchorRow(80, 24, 9, 5),
+    AnchorRow(89, 32, 5, 1),  # near-best-possible-XI band
 ]
+
+# Jitter is drawn from rng() * 10 - 5, an open interval that never quite
+# reaches its edges — treat ±5 as the practical best case a favourable seed
+# can land on.
+MAX_FAVOURABLE_JITTER = 5.0
+
+# A strong finisher's share of the team's goals rarely exceeds this in
+# practice, even though the hard cap in `_estimate_top_scorer_goals` is 0.6.
+ASSUMED_TOP_SCORER_SHARE = 0.55
+
+
+def required_overall_strength() -> float:
+    """Minimum squad strength for a shot at points/wins/unbeaten records.
+
+    Only the top anchor band's baseline losses (<=2) can ever reach 0 with
+    favourable jitter, so this is just that band's threshold.
+    """
+    return ANCHORS[-1].min_strength
+
+
+def required_attack_strength_for_goals(target_goals: int) -> float:
+    """Minimum attack strength for `target_goals` scored to be reachable."""
+    needed_base = target_goals - MAX_FAVOURABLE_JITTER
+    return 50 + (needed_base - 30) / ATTACK_GOAL_COEF
+
+
+def required_defense_strength_for_goals_conceded(target_goals: int) -> float:
+    """Minimum defense strength for conceding `target_goals` or fewer to be reachable."""
+    needed_base = target_goals + MAX_FAVOURABLE_JITTER
+    return 50 + (90 - needed_base) / DEFENSE_GOAL_COEF
+
+
+def required_attack_strength_for_top_scorer(target_goals: int) -> float:
+    """Approximate attack strength for one player to reach `target_goals`.
+
+    Assumes a strong finisher claims roughly ASSUMED_TOP_SCORER_SHARE of the
+    team's goals, then reuses the goals-for requirement on that implied total.
+    """
+    implied_goals_for = target_goals / ASSUMED_TOP_SCORER_SHARE
+    return required_attack_strength_for_goals(round(implied_goals_for))
 
 
 @dataclass
@@ -100,7 +156,10 @@ def _strength_of_families(
 
 
 def _estimate_goals(strength: float, rng: Callable[[], float], direction: str) -> int:
-    base = 30 + (strength - 50) * 1.6 if direction == "for" else 90 - (strength - 50) * 1.6
+    if direction == "for":
+        base = 30 + (strength - 50) * ATTACK_GOAL_COEF
+    else:
+        base = 90 - (strength - 50) * DEFENSE_GOAL_COEF
     jittered = base + (rng() * 10 - 5)
     return max(10, js_round(jittered))
 

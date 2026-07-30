@@ -5,13 +5,29 @@ scored against the whole list, and the result screen reports which ones the
 squad beat. Picking a target up front asked the player to commit to a goal
 before seeing a single card; evaluating afterwards turns each draft into a
 handful of things you might have hit without knowing it.
+
+Each record still carries a `strength_group` and `required_strength`, though
+— a client-side live gauge (optional, informational only) can compare a
+partially-drafted XI's average overall in that group against the threshold
+and show how close it is. That's feedback on draft *quality*, not a
+commitment to one target; every record is still evaluated at the end.
 """
 
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import Literal
 
-from app.engine.simulation import GAMES_PER_SEASON, SeasonRecord
+from app.engine.simulation import (
+    GAMES_PER_SEASON,
+    SeasonRecord,
+    required_attack_strength_for_goals,
+    required_attack_strength_for_top_scorer,
+    required_defense_strength_for_goals_conceded,
+    required_overall_strength,
+)
+
+StrengthGroup = Literal["overall", "attack", "defense"]
 
 
 @dataclass(frozen=True)
@@ -23,6 +39,8 @@ class PLRecord:
     value: int
     holder: str
     season: str
+    strength_group: StrengthGroup
+    required_strength: float
     lower_is_better: bool = False
 
 
@@ -38,6 +56,8 @@ PL_RECORDS: list[PLRecord] = [
         value=100,
         holder="Manchester City",
         season="2017-18",
+        strength_group="overall",
+        required_strength=required_overall_strength(),
     ),
     PLRecord(
         id="invincible",
@@ -48,6 +68,8 @@ PL_RECORDS: list[PLRecord] = [
         holder="Arsenal",
         season="2003-04",
         lower_is_better=True,
+        strength_group="overall",
+        required_strength=required_overall_strength(),
     ),
     PLRecord(
         id="fewest-conceded",
@@ -58,6 +80,8 @@ PL_RECORDS: list[PLRecord] = [
         holder="Chelsea",
         season="2004-05",
         lower_is_better=True,
+        strength_group="defense",
+        required_strength=required_defense_strength_for_goals_conceded(15),
     ),
     PLRecord(
         id="most-scored",
@@ -67,6 +91,8 @@ PL_RECORDS: list[PLRecord] = [
         value=106,
         holder="Manchester City",
         season="2017-18",
+        strength_group="attack",
+        required_strength=required_attack_strength_for_goals(106),
     ),
     PLRecord(
         id="top-scorer",
@@ -76,6 +102,8 @@ PL_RECORDS: list[PLRecord] = [
         value=36,
         holder="Erling Haaland",
         season="2022-23",
+        strength_group="attack",
+        required_strength=required_attack_strength_for_top_scorer(36),
     ),
     PLRecord(
         id="most-wins",
@@ -84,6 +112,8 @@ PL_RECORDS: list[PLRecord] = [
         metric="wins",
         value=32,
         holder="Manchester City",
+        strength_group="overall",
+        required_strength=required_overall_strength(),
         season="2017-18",
     ),
 ]

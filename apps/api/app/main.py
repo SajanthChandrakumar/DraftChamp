@@ -122,6 +122,8 @@ def get_records() -> list[RecordInfo]:
             value=r.value,
             holder=r.holder,
             season=r.season,
+            strength_group=r.strength_group,
+            required_strength=r.required_strength,
             lower_is_better=r.lower_is_better,
         )
         for r in records_engine.PL_RECORDS
