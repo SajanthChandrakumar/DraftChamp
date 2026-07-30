@@ -2,17 +2,21 @@ import { useMemo, useState } from "react";
 import { api } from "../api/client";
 import { hasUsablePick, openSlotsFor, pickRandomCombo } from "../game/eligibility";
 import { useGameData } from "../game/GameDataContext";
+import { buildSpinReel } from "../game/spin";
 import { ComboReveal } from "../components/ComboReveal";
 import { Pitch } from "../components/Pitch";
 import { PlayerCard } from "../components/PlayerCard";
 import { playersOf } from "../state/draftContext";
 import { useDuelDispatch, useDuelState } from "../state/duelContext";
 
+const SPIN_MIN_MS = 900;
+
 export function DuelDraftScreen() {
-  const { league, posToFam } = useGameData();
+  const { league } = useGameData();
   const state = useDuelState();
   const dispatch = useDuelDispatch();
   const [spinError, setSpinError] = useState(null);
+  const [spinReel, setSpinReel] = useState(null);
 
   const activeFormation = state.turn === "A" ? state.formationA : state.formationB;
   const activeFilled = state.turn === "A" ? state.filledA : state.filledB;
@@ -28,23 +32,32 @@ export function DuelDraftScreen() {
   const eligibleSlotIds = useMemo(() => {
     if (!selectedPlayer || !activeFormation) return new Set();
     return new Set(
-      openSlotsFor(selectedPlayer, activeFormation, activePlayers, posToFam).map((s) => s.id)
+      openSlotsFor(selectedPlayer, activeFormation, activePlayers).map((s) => s.id)
     );
-  }, [selectedPlayer, activeFormation, activePlayers, posToFam]);
+  }, [selectedPlayer, activeFormation, activePlayers]);
 
   const canAct = useMemo(() => {
     if (!activeFormation) return false;
-    return hasUsablePick(available, activeFormation, activePlayers, posToFam, null);
-  }, [available, activeFormation, activePlayers, posToFam]);
+    return hasUsablePick(available, activeFormation, activePlayers, null);
+  }, [available, activeFormation, activePlayers]);
 
   const handleSpin = async () => {
     setSpinError(null);
+
+    const combo = pickRandomCombo(league.combos);
+    const labelFor = (c) => `${league.teams.find((t) => t.code === c.team)?.name ?? c.team} ${c.season}`;
+    setSpinReel(buildSpinReel(league.combos.map(labelFor), labelFor(combo)));
+
     try {
-      const combo = pickRandomCombo(league.combos);
-      const squadResponse = await api.squad(combo.team, combo.season);
+      const [squadResponse] = await Promise.all([
+        api.squad(combo.team, combo.season),
+        new Promise((resolve) => setTimeout(resolve, SPIN_MIN_MS)),
+      ]);
       dispatch({ type: "SPIN_COMBO", combo, squad: squadResponse.players });
     } catch {
       setSpinError("Could not load that squad — try spinning again.");
+    } finally {
+      setSpinReel(null);
     }
   };
 
@@ -82,6 +95,7 @@ export function DuelDraftScreen() {
             combo={state.currentCombo}
             teamName={teamName}
             onSpin={() => void handleSpin()}
+            spinReel={spinReel}
           />
           {spinError && <p className="draft-screen__error">{spinError}</p>}
           {state.phase === "drafting" && (
@@ -96,14 +110,19 @@ export function DuelDraftScreen() {
                 </button>
               )}
               <div className="draft-screen__squad">
-                {available.map((player) => (
-                  <PlayerCard
-                    key={player.id}
-                    player={player}
-                    isSelected={player.id === state.selectedPlayerId}
-                    onTap={() => dispatch({ type: "SELECT_PLAYER", playerId: player.id })}
-                  />
-                ))}
+                {available.map((player) => {
+                  const positionTaken =
+                    openSlotsFor(player, activeFormation, activePlayers).length === 0;
+                  return (
+                    <PlayerCard
+                      key={player.id}
+                      player={player}
+                      isSelected={player.id === state.selectedPlayerId}
+                      onTap={() => dispatch({ type: "SELECT_PLAYER", playerId: player.id })}
+                      disabled={positionTaken}
+                    />
+                  );
+                })}
               </div>
             </>
           )}

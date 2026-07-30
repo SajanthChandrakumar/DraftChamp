@@ -1,23 +1,5 @@
 // TEST FIXTURE ONLY — synthetic data, not real players.
 
-export const POS_TO_FAM = {
-  GK: "GK",
-  CB: "DEF",
-  LB: "DEF",
-  RB: "DEF",
-  LWB: "DEF",
-  RWB: "DEF",
-  CDM: "MID",
-  CM: "MID",
-  CAM: "MID",
-  LM: "MID",
-  RM: "MID",
-  LW: "FWD",
-  RW: "FWD",
-  ST: "FWD",
-  CF: "FWD",
-};
-
 export const FORMATION_433 = {
   id: "4-3-3",
   slots: [

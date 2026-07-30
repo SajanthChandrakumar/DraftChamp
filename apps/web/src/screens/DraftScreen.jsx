@@ -2,20 +2,25 @@ import { useMemo, useState } from "react";
 import { api } from "../api/client";
 import { hasUsablePick, openSlotsFor, pickRandomCombo } from "../game/eligibility";
 import { useGameData } from "../game/GameDataContext";
+import { buildSpinReel } from "../game/spin";
+import { computeDraftStrength } from "../game/strength";
 import { ComboReveal } from "../components/ComboReveal";
 import { Pitch } from "../components/Pitch";
 import { PlayerCard } from "../components/PlayerCard";
+import { RatingScaler } from "../components/RatingScaler";
 import { RoundIndicator } from "../components/RoundIndicator";
 import { playersOf, useDraftDispatch, useDraftState } from "../state/draftContext";
 
 const EMPTY_SQUAD = [];
+const SPIN_MIN_MS = 900;
 
 export function DraftScreen() {
-  const { league, posToFam } = useGameData();
+  const { league, records } = useGameData();
   const state = useDraftState();
   const dispatch = useDraftDispatch();
   const [moveFromSlotId, setMoveFromSlotId] = useState(null);
   const [spinError, setSpinError] = useState(null);
+  const [spinReel, setSpinReel] = useState(null);
 
   const squad = state.currentSquad ?? EMPTY_SQUAD;
   const filledPlayers = useMemo(() => playersOf(state.filled), [state.filled]);
@@ -33,9 +38,9 @@ export function DraftScreen() {
   const eligibleSlotIds = useMemo(() => {
     if (!selectedPlayer || !state.formation) return new Set();
     return new Set(
-      openSlotsFor(selectedPlayer, state.formation, filledPlayers, posToFam).map((s) => s.id)
+      openSlotsFor(selectedPlayer, state.formation, filledPlayers).map((s) => s.id)
     );
-  }, [selectedPlayer, state.formation, filledPlayers, posToFam]);
+  }, [selectedPlayer, state.formation, filledPlayers]);
 
   // Peak XI restricts the spin pool to the chosen club's own seasons.
   const comboPool = useMemo(
@@ -48,19 +53,40 @@ export function DraftScreen() {
 
   const remainingBudget = state.budgetCap != null ? state.budgetCap - state.budgetSpent : null;
 
+  const draftStrength = useMemo(
+    () => computeDraftStrength(state.filled, state.formation),
+    [state.filled, state.formation]
+  );
+  // Top-scorer tracks the same attack rating as most-scored, just at a lower
+  // bar — showing it alongside the rest would just duplicate that bar, so
+  // it's evaluated at the end like every other record but left off this list.
+  const trackedRecords = useMemo(
+    () => records.filter((r) => r.id !== "top-scorer"),
+    [records]
+  );
+
   const canAct = useMemo(() => {
     if (!state.formation || state.phase !== "drafting") return true;
-    return hasUsablePick(available, state.formation, filledPlayers, posToFam, remainingBudget);
-  }, [available, state.formation, filledPlayers, posToFam, remainingBudget, state.phase]);
+    return hasUsablePick(available, state.formation, filledPlayers, remainingBudget);
+  }, [available, state.formation, filledPlayers, remainingBudget, state.phase]);
 
   const handleSpin = async () => {
     setSpinError(null);
+
+    const combo = pickRandomCombo(comboPool);
+    const labelFor = (c) => `${league.teams.find((t) => t.code === c.team)?.name ?? c.team} ${c.season}`;
+    setSpinReel(buildSpinReel(comboPool.map(labelFor), labelFor(combo)));
+
     try {
-      const combo = pickRandomCombo(comboPool);
-      const squadResponse = await api.squad(combo.team, combo.season);
+      const [squadResponse] = await Promise.all([
+        api.squad(combo.team, combo.season),
+        new Promise((resolve) => setTimeout(resolve, SPIN_MIN_MS)),
+      ]);
       dispatch({ type: "SPIN_COMBO", combo, squad: squadResponse.players });
     } catch {
       setSpinError("Could not load that squad — try spinning again.");
+    } finally {
+      setSpinReel(null);
     }
   };
 
@@ -116,10 +142,17 @@ export function DraftScreen() {
         />
         <div className="draft-screen__side">
           <RoundIndicator round={state.round} totalRounds={state.formation.slots.length} />
+          <div className="record-progress">
+            <span className="record-progress__label">Record progress</span>
+            {trackedRecords.map((r) => (
+              <RatingScaler key={r.id} record={r} currentStrength={draftStrength[r.strengthGroup]} />
+            ))}
+          </div>
           <ComboReveal
             combo={state.currentCombo}
             teamName={teamName}
             onSpin={() => void handleSpin()}
+            spinReel={spinReel}
           />
           {spinError && <p className="draft-screen__error">{spinError}</p>}
           {state.phase === "drafting" && !canAct && (
@@ -129,18 +162,22 @@ export function DraftScreen() {
           )}
           {state.phase === "drafting" && (
             <div className="draft-screen__squad">
-              {available.map((player) => (
-                <PlayerCard
-                  key={player.id}
-                  player={player}
-                  isSelected={player.id === state.selectedPlayerId}
-                  onTap={() => handleSelectPlayer(player.id)}
-                  cost={remainingBudget != null ? (player.marketValue ?? 0) : undefined}
-                  disabled={
-                    remainingBudget != null && (player.marketValue ?? 0) > remainingBudget
-                  }
-                />
-              ))}
+              {available.map((player) => {
+                const overBudget =
+                  remainingBudget != null && (player.marketValue ?? 0) > remainingBudget;
+                const positionTaken =
+                  openSlotsFor(player, state.formation, filledPlayers).length === 0;
+                return (
+                  <PlayerCard
+                    key={player.id}
+                    player={player}
+                    isSelected={player.id === state.selectedPlayerId}
+                    onTap={() => handleSelectPlayer(player.id)}
+                    cost={remainingBudget != null ? (player.marketValue ?? 0) : undefined}
+                    disabled={overBudget || positionTaken}
+                  />
+                );
+              })}
             </div>
           )}
           <button

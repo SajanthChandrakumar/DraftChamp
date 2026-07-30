@@ -153,6 +153,78 @@
   background: var(--accent);
 }
 
+/* ---------- Record progress ---------- */
+
+.record-progress {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.record-progress__label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.rating-scaler {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.rating-scaler__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+
+.rating-scaler__label {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.rating-scaler__reading {
+  font-variant-numeric: tabular-nums;
+  font-size: 11px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.rating-scaler--ontrack .rating-scaler__reading {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.rating-scaler__check {
+  color: var(--accent);
+}
+
+.rating-scaler__track {
+  height: 6px;
+  background: var(--border);
+  overflow: hidden;
+}
+
+.rating-scaler__fill {
+  height: 100%;
+  background: var(--text-muted);
+  transition: width 0.3s ease-out;
+}
+
+.rating-scaler__fill--ontrack {
+  background: var(--accent);
+}
+
 /* ---------- Combo reveal ---------- */
 
 .combo-reveal {
@@ -165,6 +237,7 @@
   flex-direction: column;
   align-items: center;
   gap: 2px;
+  animation: rise-in 0.3s ease-out both;
 }
 
 .combo-reveal__eyebrow {
@@ -173,6 +246,7 @@
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--text-muted);
+  transition: color 0.2s ease;
 }
 
 .combo-reveal__combo {
@@ -181,8 +255,64 @@
   font-weight: 700;
 }
 
+.combo-reveal__combo--landed {
+  animation: combo-land 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes combo-land {
+  from {
+    opacity: 0;
+    transform: translateY(4px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 .combo-reveal__season {
   color: var(--accent);
+}
+
+.combo-reveal--spinning {
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.combo-reel-viewport {
+  position: relative;
+  height: 40px;
+  width: 100%;
+  overflow: hidden;
+  mask-image: linear-gradient(to bottom, transparent 0, black 20%, black 80%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, black 20%, black 80%, transparent 100%);
+}
+
+.combo-reel-track {
+  display: flex;
+  flex-direction: column;
+  transition: transform 900ms cubic-bezier(0.1, 0.85, 0.2, 1);
+  will-change: transform;
+}
+
+.combo-reel-item {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 var(--space-2);
+  font-family: var(--font-display);
+  font-size: clamp(16px, 3vw, 20px);
+  font-weight: 700;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.combo-reel-track > .combo-reel-item:last-child {
+  color: var(--text);
 }
 
 .combo-reveal__spin {
@@ -195,6 +325,17 @@
   background: var(--accent);
   color: var(--accent-ink);
   clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+  transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+.combo-reveal__spin:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.08);
+}
+
+.combo-reveal__spin:active {
+  transform: translateY(0);
+  filter: brightness(0.96);
 }
 
 /* ---------- Pitch ---------- */
@@ -310,6 +451,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: var(--space-3);
+  animation: rise-in 0.35s ease-out both;
 }
 
 .player-card {
@@ -322,7 +464,7 @@
   background: var(--surface);
   color: var(--text);
   text-align: left;
-  transition: border-color 0.15s ease;
+  transition: border-color 0.15s ease, opacity 0.2s ease;
 }
 
 .player-card--selected {

@@ -2,28 +2,38 @@
  * Client-side eligibility helpers.
  *
  * These exist purely so tapping a card can highlight its open slots instantly,
- * without a round-trip. They work off the formation and position-family
- * definitions fetched from the API, so they can't drift from the server's own
- * rules — and the server re-validates every placement at simulate time anyway.
+ * without a round-trip. Matching is by exact position — a player is only
+ * eligible for a slot whose label is one of their listed positions, e.g. an
+ * RM cannot fill a CM slot. A handful of listed positions (CDM, CAM, LWB,
+ * RWB, CF) have no formation slot of their own, so they alias onto the
+ * nearest slot that plays the same role.
  */
 
-export function eligibleFamilies(player, posToFam) {
-  return new Set(player.positions.map((p) => posToFam[p]).filter(Boolean));
+const POSITION_ALIASES = {
+  CDM: "CM",
+  CAM: "CM",
+  LWB: "LB",
+  RWB: "RB",
+  CF: "ST",
+};
+
+export function eligibleSlotLabels(player) {
+  return new Set(player.positions.map((p) => POSITION_ALIASES[p] ?? p));
 }
 
-export function openSlotsFor(player, formation, filledSlots, posToFam) {
-  const fams = eligibleFamilies(player, posToFam);
-  return formation.slots.filter((slot) => fams.has(slot.fam) && !filledSlots[slot.id]);
+export function openSlotsFor(player, formation, filledSlots) {
+  const labels = eligibleSlotLabels(player);
+  return formation.slots.filter((slot) => labels.has(slot.label) && !filledSlots[slot.id]);
 }
 
 export function isDraftComplete(filledSlots, formation) {
   return formation.slots.every((slot) => !!filledSlots[slot.id]);
 }
 
-export function hasUsablePick(players, formation, filledSlots, posToFam, remainingBudget) {
+export function hasUsablePick(players, formation, filledSlots, remainingBudget) {
   return players.some((player) => {
     if (remainingBudget != null && (player.marketValue ?? 0) > remainingBudget) return false;
-    return openSlotsFor(player, formation, filledSlots, posToFam).length > 0;
+    return openSlotsFor(player, formation, filledSlots).length > 0;
   });
 }
 
