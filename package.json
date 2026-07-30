@@ -1,27 +1,21 @@
 {
   "name": "draftchamp",
   "private": true,
-  "version": "0.0.0",
-  "type": "module",
+  "version": "0.1.0",
+  "description": "DraftChamp monorepo: React frontend (apps/web) + FastAPI backend (apps/api)",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
-    "lint": "oxlint",
-    "preview": "vite preview",
-    "test": "vitest run"
-  },
-  "dependencies": {
-    "react": "^19.2.7",
-    "react-dom": "^19.2.7"
+    "dev": "concurrently -n api,web -c magenta,cyan \"npm:dev:api\" \"npm:dev:web\"",
+    "dev:api": "cd apps/api && uv run uvicorn app.main:app --reload --port 8000",
+    "dev:web": "cd apps/web && npm run dev",
+    "dev:fixture": "concurrently -n api,web -c magenta,cyan \"npm:dev:api:fixture\" \"npm:dev:web\"",
+    "dev:api:fixture": "cd apps/api && DRAFTCHAMP_LEAGUE_FILE=app/data/fixture_league.json uv run uvicorn app.main:app --reload --port 8000",
+    "build": "cd apps/web && npm run build",
+    "test": "npm run test:api && npm run test:web",
+    "test:api": "cd apps/api && uv run pytest -q",
+    "test:web": "cd apps/web && npm run test",
+    "install:all": "cd apps/web && npm install && cd ../api && uv sync --extra dev"
   },
   "devDependencies": {
-    "@types/node": "^24.13.2",
-    "@types/react": "^19.2.17",
-    "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^6.0.3",
-    "oxlint": "^1.71.0",
-    "typescript": "~6.0.2",
-    "vite": "^8.1.1",
-    "vitest": "^3.2.4"
+    "concurrently": "^9.1.0"
   }
 }
