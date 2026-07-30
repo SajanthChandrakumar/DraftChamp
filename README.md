@@ -51,6 +51,34 @@ they're chosen before the draft starts:
 - **Head-to-Head** — two players, one device, drafting from the same reveals.
 
 Records are *not* a mode. Every completed XI is scored against all of them.
+While you draft, a live "record progress" panel tracks five of the six
+against your picks so far — each compares the average overall of the
+relevant slots (overall / attack / defense) to the strength that record
+needs, updating after every pick. (The sixth, top-scorer, tracks the same
+attack rating as most-scored at a lower bar, so it isn't shown separately —
+it's still evaluated at the end.)
+
+The six thresholds are real Premier League records, but the simulation's
+anchor bands and goal formulas (`apps/api/app/engine/simulation.py`) are
+calibrated against *this dataset's* rating ceiling — the highest-rated real
+player tops out at 91 overall, not 99. That calibration is deliberate: all
+six records are reachable by a legally-draftable XI (verified by brute-force
+search), but only near the very top of what the real data allows — a merely
+great single-season squad clears 0-1 of them, not all 6.
+
+## Formations
+
+Nine formations, all drafted onto exact position slots — a player listed
+only as RM is never eligible for a CM slot, even though both are
+midfielders. A few real positions with no formation slot of their own
+(CDM, CAM, LWB, RWB, CF) alias onto the nearest slot that plays the same
+role (CDM/CAM → CM, LWB → LB, RWB → RB, CF → ST).
+
+4-3-3 · 4-4-2 · 3-5-2 · 4-2-3-1 · 4-1-4-1 · 5-3-2 · 3-4-3 · 5-4-1 · 4-5-1
+
+Adding another is just another entry in `FORMATIONS`
+(`apps/api/app/engine/formations.py`) — the client renders and offers
+whatever the server lists, with no frontend changes needed.
 
 ## Adding the real dataset
 
@@ -65,6 +93,7 @@ code — see the README next to it for the expected schema.
 - `apps/api/app/main.py` — the HTTP surface.
 - `apps/web/src/api/` — typed API client mirroring the server's models.
 - `apps/web/src/game/` — client-side eligibility helpers (for instant slot
-  highlighting) and the bootstrapped game-data context.
+  highlighting), the spin-reel and record-progress-strength helpers, and the
+  bootstrapped game-data context.
 - `apps/web/src/state/` — draft and duel session reducers.
 - `apps/web/src/components/`, `src/screens/` — the UI.
