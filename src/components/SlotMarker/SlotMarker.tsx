@@ -8,6 +8,11 @@ export interface SlotMarkerProps {
   onTap: () => void;
 }
 
+function surname(fullName: string): string {
+  const parts = fullName.trim().split(/\s+/);
+  return parts[parts.length - 1];
+}
+
 export function SlotMarker({ slot, player, isEligible, onTap }: SlotMarkerProps) {
   const filled = !!player;
   const classes = [
@@ -25,12 +30,10 @@ export function SlotMarker({ slot, player, isEligible, onTap }: SlotMarkerProps)
       style={{ left: `${slot.x}%`, top: `${slot.y}%` }}
       onClick={onTap}
       disabled={!filled && !isEligible}
+      title={filled ? `${player.name} (${player.overall} OVR)` : slot.label}
     >
-      {filled ? (
-        <span className="slot-marker__player">{player.name}</span>
-      ) : (
-        <span className="slot-marker__label">{slot.label}</span>
-      )}
+      <span className="slot-marker__badge">{filled ? player.shirtNumber ?? "–" : slot.label}</span>
+      {filled && <span className="slot-marker__tag">{surname(player.name)}</span>}
     </button>
   );
 }

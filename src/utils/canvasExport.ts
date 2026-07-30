@@ -3,11 +3,16 @@ import type { SeasonRecord } from "../engine/simulation";
 
 const CANVAS_SIZE = 1080;
 
+const PITCH_BG = "#0d1f16";
+const CHALK = "#f3f1e7";
+const CHALK_MUTED = "#9fb8a8";
+const BRASS = "#c8922f";
+
 function findPlayer(filledSlots: Record<string, Player>, id: number): Player | undefined {
   return Object.values(filledSlots).find((p) => p.id === id);
 }
 
-/** Draws a flat, asset-free shareable result card (placeholder visual design). */
+/** Draws the shareable result card, matching the app's pitch-and-brass palette. */
 export function renderResultCanvas(
   record: SeasonRecord,
   filledSlots: Record<string, Player>
@@ -18,33 +23,35 @@ export function renderResultCanvas(
   const ctx = canvas.getContext("2d");
   if (!ctx) return canvas;
 
-  ctx.fillStyle = "#0f1115";
+  ctx.fillStyle = PITCH_BG;
   ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
 
-  ctx.fillStyle = "#f5f5f5";
-  ctx.font = "bold 56px sans-serif";
   ctx.textAlign = "center";
-  ctx.fillText("DraftChamp", CANVAS_SIZE / 2, 140);
 
-  ctx.font = "bold 40px sans-serif";
-  ctx.fillStyle = "#ffcc66";
-  ctx.fillText(record.tier, CANVAS_SIZE / 2, 220);
+  ctx.fillStyle = BRASS;
+  ctx.font = "700 22px 'Public Sans', sans-serif";
+  ctx.fillText("DRAFTCHAMP", CANVAS_SIZE / 2, 110);
 
-  ctx.font = "48px sans-serif";
-  ctx.fillStyle = "#f5f5f5";
-  ctx.fillText(`${record.wins}W ${record.draws}D ${record.losses}L`, CANVAS_SIZE / 2, 340);
+  ctx.fillStyle = CHALK;
+  ctx.font = "700 64px 'Big Shoulders Display', sans-serif";
+  ctx.fillText(record.tier, CANVAS_SIZE / 2, 200);
 
-  ctx.font = "32px sans-serif";
-  ctx.fillText(`${record.points} pts · P${record.leaguePosition}`, CANVAS_SIZE / 2, 400);
+  ctx.font = "700 52px 'Big Shoulders Display', sans-serif";
+  ctx.fillText(`${record.wins}-${record.draws}-${record.losses}`, CANVAS_SIZE / 2, 330);
+
+  ctx.fillStyle = CHALK_MUTED;
+  ctx.font = "600 30px 'Public Sans', sans-serif";
+  ctx.fillText(`${record.points} pts · P${record.leaguePosition}`, CANVAS_SIZE / 2, 390);
 
   const topPlayer = findPlayer(filledSlots, record.topPlayerId);
   const topScorer = findPlayer(filledSlots, record.topScorerId);
-  ctx.font = "28px sans-serif";
+  ctx.fillStyle = CHALK;
+  ctx.font = "600 28px 'Public Sans', sans-serif";
   if (topPlayer) ctx.fillText(`Top player: ${topPlayer.name}`, CANVAS_SIZE / 2, 470);
   if (topScorer) ctx.fillText(`Top scorer: ${topScorer.name}`, CANVAS_SIZE / 2, 510);
 
-  ctx.font = "26px sans-serif";
-  ctx.fillStyle = "#bbbbbb";
+  ctx.fillStyle = CHALK_MUTED;
+  ctx.font = "400 26px 'Public Sans', sans-serif";
   wrapText(ctx, record.narrative, CANVAS_SIZE / 2, 620, CANVAS_SIZE - 160, 34);
 
   return canvas;

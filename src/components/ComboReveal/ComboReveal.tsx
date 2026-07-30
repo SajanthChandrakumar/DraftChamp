@@ -11,7 +11,7 @@ export function ComboReveal({ combo, teamName, onSpin }: ComboRevealProps) {
     return (
       <div className="combo-reveal">
         <button type="button" className="combo-reveal__spin" onClick={onSpin}>
-          Spin
+          Spin the club
         </button>
       </div>
     );
@@ -19,9 +19,10 @@ export function ComboReveal({ combo, teamName, onSpin }: ComboRevealProps) {
 
   const [, season] = combo;
   return (
-    <div className="combo-reveal">
+    <div className="combo-reveal combo-reveal--set">
+      <span className="combo-reveal__eyebrow">On the clock</span>
       <div className="combo-reveal__combo">
-        {teamName ?? combo[0]} {season}
+        {teamName ?? combo[0]} <span className="combo-reveal__season">{season}</span>
       </div>
     </div>
   );

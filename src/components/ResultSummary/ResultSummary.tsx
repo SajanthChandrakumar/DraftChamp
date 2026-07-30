@@ -13,12 +13,28 @@ export function ResultSummary({ record, filledSlots }: ResultSummaryProps) {
 
   return (
     <div className="result-summary">
-      <h2>{record.tier}</h2>
+      <span className="result-summary__eyebrow">Full time</span>
+      <h2 className="result-summary__tier">{record.tier}</h2>
       <p className="result-summary__record">
-        {record.wins}W {record.draws}D {record.losses}L &mdash; {record.points} pts &mdash; P{record.leaguePosition}
+        {record.wins}-{record.draws}-{record.losses}
+        <span className="result-summary__meta">
+          {record.points} pts &middot; P{record.leaguePosition}
+        </span>
       </p>
-      {topPlayer && <p>Top player: {topPlayer.name}</p>}
-      {topScorer && <p>Top scorer: {topScorer.name}</p>}
+      <dl className="result-summary__standouts">
+        {topPlayer && (
+          <div>
+            <dt>Top player</dt>
+            <dd>{topPlayer.name}</dd>
+          </div>
+        )}
+        {topScorer && (
+          <div>
+            <dt>Top scorer</dt>
+            <dd>{topScorer.name}</dd>
+          </div>
+        )}
+      </dl>
       <p className="result-summary__narrative">{record.narrative}</p>
     </div>
   );
