@@ -1,0 +1,1112 @@
+{
+  "id": "fixture-league",
+  "displayName": "Fixture League",
+  "teams": {
+    "TMA": {
+      "name": "Test Town A"
+    },
+    "TMB": {
+      "name": "Test Town B"
+    },
+    "TMC": {
+      "name": "Test Town C"
+    }
+  },
+  "years": [
+    2023,
+    2024
+  ],
+  "combos": [
+    [
+      "TMA",
+      2023
+    ],
+    [
+      "TMA",
+      2024
+    ],
+    [
+      "TMB",
+      2024
+    ],
+    [
+      "TMC",
+      2023
+    ]
+  ],
+  "squads": {
+    "TMA|2023": [
+      {
+        "id": 1,
+        "name": "Keeper #1",
+        "positions": [
+          "GK"
+        ],
+        "overall": 70,
+        "age": 24,
+        "shirtNumber": 1,
+        "marketValue": 70000000,
+        "attributes": {
+          "pace": 70,
+          "shooting": 70,
+          "passing": 70,
+          "dribbling": 70,
+          "defending": 70,
+          "physical": 70
+        }
+      },
+      {
+        "id": 2,
+        "name": "Center Back A #2",
+        "positions": [
+          "CB"
+        ],
+        "overall": 71,
+        "age": 24,
+        "shirtNumber": 2,
+        "marketValue": 71000000,
+        "attributes": {
+          "pace": 71,
+          "shooting": 71,
+          "passing": 71,
+          "dribbling": 71,
+          "defending": 71,
+          "physical": 71
+        }
+      },
+      {
+        "id": 3,
+        "name": "Center Back B #3",
+        "positions": [
+          "CB"
+        ],
+        "overall": 72,
+        "age": 24,
+        "shirtNumber": 3,
+        "marketValue": 72000000,
+        "attributes": {
+          "pace": 72,
+          "shooting": 72,
+          "passing": 72,
+          "dribbling": 72,
+          "defending": 72,
+          "physical": 72
+        }
+      },
+      {
+        "id": 4,
+        "name": "Left Back #4",
+        "positions": [
+          "LB"
+        ],
+        "overall": 73,
+        "age": 24,
+        "shirtNumber": 4,
+        "marketValue": 73000000,
+        "attributes": {
+          "pace": 73,
+          "shooting": 73,
+          "passing": 73,
+          "dribbling": 73,
+          "defending": 73,
+          "physical": 73
+        }
+      },
+      {
+        "id": 5,
+        "name": "Right Back #5",
+        "positions": [
+          "RB"
+        ],
+        "overall": 74,
+        "age": 24,
+        "shirtNumber": 5,
+        "marketValue": 74000000,
+        "attributes": {
+          "pace": 74,
+          "shooting": 74,
+          "passing": 74,
+          "dribbling": 74,
+          "defending": 74,
+          "physical": 74
+        }
+      },
+      {
+        "id": 6,
+        "name": "Sweeper #6",
+        "positions": [
+          "CB"
+        ],
+        "overall": 70,
+        "age": 24,
+        "shirtNumber": 6,
+        "marketValue": 70000000,
+        "attributes": {
+          "pace": 70,
+          "shooting": 70,
+          "passing": 70,
+          "dribbling": 70,
+          "defending": 70,
+          "physical": 70
+        }
+      },
+      {
+        "id": 7,
+        "name": "Midfielder A #7",
+        "positions": [
+          "CM"
+        ],
+        "overall": 71,
+        "age": 24,
+        "shirtNumber": 7,
+        "marketValue": 71000000,
+        "attributes": {
+          "pace": 71,
+          "shooting": 71,
+          "passing": 71,
+          "dribbling": 71,
+          "defending": 71,
+          "physical": 71
+        }
+      },
+      {
+        "id": 8,
+        "name": "Midfielder B #8",
+        "positions": [
+          "CM"
+        ],
+        "overall": 72,
+        "age": 24,
+        "shirtNumber": 8,
+        "marketValue": 72000000,
+        "attributes": {
+          "pace": 72,
+          "shooting": 72,
+          "passing": 72,
+          "dribbling": 72,
+          "defending": 72,
+          "physical": 72
+        }
+      },
+      {
+        "id": 9,
+        "name": "Holding Mid #9",
+        "positions": [
+          "CDM"
+        ],
+        "overall": 73,
+        "age": 24,
+        "shirtNumber": 9,
+        "marketValue": 73000000,
+        "attributes": {
+          "pace": 73,
+          "shooting": 73,
+          "passing": 73,
+          "dribbling": 73,
+          "defending": 73,
+          "physical": 73
+        }
+      },
+      {
+        "id": 10,
+        "name": "Left Mid #10",
+        "positions": [
+          "LM"
+        ],
+        "overall": 74,
+        "age": 24,
+        "shirtNumber": 10,
+        "marketValue": 74000000,
+        "attributes": {
+          "pace": 74,
+          "shooting": 74,
+          "passing": 74,
+          "dribbling": 74,
+          "defending": 74,
+          "physical": 74
+        }
+      },
+      {
+        "id": 11,
+        "name": "Right Mid #11",
+        "positions": [
+          "RM"
+        ],
+        "overall": 70,
+        "age": 24,
+        "shirtNumber": 11,
+        "marketValue": 70000000,
+        "attributes": {
+          "pace": 70,
+          "shooting": 70,
+          "passing": 70,
+          "dribbling": 70,
+          "defending": 70,
+          "physical": 70
+        }
+      },
+      {
+        "id": 12,
+        "name": "Striker A #12",
+        "positions": [
+          "ST"
+        ],
+        "overall": 71,
+        "age": 24,
+        "shirtNumber": 12,
+        "marketValue": 71000000,
+        "attributes": {
+          "pace": 71,
+          "shooting": 71,
+          "passing": 71,
+          "dribbling": 71,
+          "defending": 71,
+          "physical": 71
+        }
+      },
+      {
+        "id": 13,
+        "name": "Striker B #13",
+        "positions": [
+          "ST"
+        ],
+        "overall": 72,
+        "age": 24,
+        "shirtNumber": 13,
+        "marketValue": 72000000,
+        "attributes": {
+          "pace": 72,
+          "shooting": 72,
+          "passing": 72,
+          "dribbling": 72,
+          "defending": 72,
+          "physical": 72
+        }
+      },
+      {
+        "id": 14,
+        "name": "Winger #14",
+        "positions": [
+          "LW"
+        ],
+        "overall": 73,
+        "age": 24,
+        "shirtNumber": 14,
+        "marketValue": 73000000,
+        "attributes": {
+          "pace": 73,
+          "shooting": 73,
+          "passing": 73,
+          "dribbling": 73,
+          "defending": 73,
+          "physical": 73
+        }
+      }
+    ],
+    "TMA|2024": [
+      {
+        "id": 300,
+        "name": "Keeper #300",
+        "positions": [
+          "GK"
+        ],
+        "overall": 74,
+        "age": 24,
+        "shirtNumber": 3,
+        "marketValue": 74000000,
+        "attributes": {
+          "pace": 74,
+          "shooting": 74,
+          "passing": 74,
+          "dribbling": 74,
+          "defending": 74,
+          "physical": 74
+        }
+      },
+      {
+        "id": 301,
+        "name": "Center Back A #301",
+        "positions": [
+          "CB"
+        ],
+        "overall": 75,
+        "age": 24,
+        "shirtNumber": 4,
+        "marketValue": 75000000,
+        "attributes": {
+          "pace": 75,
+          "shooting": 75,
+          "passing": 75,
+          "dribbling": 75,
+          "defending": 75,
+          "physical": 75
+        }
+      },
+      {
+        "id": 302,
+        "name": "Center Back B #302",
+        "positions": [
+          "CB"
+        ],
+        "overall": 76,
+        "age": 24,
+        "shirtNumber": 5,
+        "marketValue": 76000000,
+        "attributes": {
+          "pace": 76,
+          "shooting": 76,
+          "passing": 76,
+          "dribbling": 76,
+          "defending": 76,
+          "physical": 76
+        }
+      },
+      {
+        "id": 303,
+        "name": "Left Back #303",
+        "positions": [
+          "LB"
+        ],
+        "overall": 77,
+        "age": 24,
+        "shirtNumber": 6,
+        "marketValue": 77000000,
+        "attributes": {
+          "pace": 77,
+          "shooting": 77,
+          "passing": 77,
+          "dribbling": 77,
+          "defending": 77,
+          "physical": 77
+        }
+      },
+      {
+        "id": 304,
+        "name": "Right Back #304",
+        "positions": [
+          "RB"
+        ],
+        "overall": 78,
+        "age": 24,
+        "shirtNumber": 7,
+        "marketValue": 78000000,
+        "attributes": {
+          "pace": 78,
+          "shooting": 78,
+          "passing": 78,
+          "dribbling": 78,
+          "defending": 78,
+          "physical": 78
+        }
+      },
+      {
+        "id": 305,
+        "name": "Sweeper #305",
+        "positions": [
+          "CB"
+        ],
+        "overall": 74,
+        "age": 24,
+        "shirtNumber": 8,
+        "marketValue": 74000000,
+        "attributes": {
+          "pace": 74,
+          "shooting": 74,
+          "passing": 74,
+          "dribbling": 74,
+          "defending": 74,
+          "physical": 74
+        }
+      },
+      {
+        "id": 306,
+        "name": "Midfielder A #306",
+        "positions": [
+          "CM"
+        ],
+        "overall": 75,
+        "age": 24,
+        "shirtNumber": 9,
+        "marketValue": 75000000,
+        "attributes": {
+          "pace": 75,
+          "shooting": 75,
+          "passing": 75,
+          "dribbling": 75,
+          "defending": 75,
+          "physical": 75
+        }
+      },
+      {
+        "id": 307,
+        "name": "Midfielder B #307",
+        "positions": [
+          "CM"
+        ],
+        "overall": 76,
+        "age": 24,
+        "shirtNumber": 10,
+        "marketValue": 76000000,
+        "attributes": {
+          "pace": 76,
+          "shooting": 76,
+          "passing": 76,
+          "dribbling": 76,
+          "defending": 76,
+          "physical": 76
+        }
+      },
+      {
+        "id": 308,
+        "name": "Holding Mid #308",
+        "positions": [
+          "CDM"
+        ],
+        "overall": 77,
+        "age": 24,
+        "shirtNumber": 11,
+        "marketValue": 77000000,
+        "attributes": {
+          "pace": 77,
+          "shooting": 77,
+          "passing": 77,
+          "dribbling": 77,
+          "defending": 77,
+          "physical": 77
+        }
+      },
+      {
+        "id": 309,
+        "name": "Left Mid #309",
+        "positions": [
+          "LM"
+        ],
+        "overall": 78,
+        "age": 24,
+        "shirtNumber": 12,
+        "marketValue": 78000000,
+        "attributes": {
+          "pace": 78,
+          "shooting": 78,
+          "passing": 78,
+          "dribbling": 78,
+          "defending": 78,
+          "physical": 78
+        }
+      },
+      {
+        "id": 310,
+        "name": "Right Mid #310",
+        "positions": [
+          "RM"
+        ],
+        "overall": 74,
+        "age": 24,
+        "shirtNumber": 13,
+        "marketValue": 74000000,
+        "attributes": {
+          "pace": 74,
+          "shooting": 74,
+          "passing": 74,
+          "dribbling": 74,
+          "defending": 74,
+          "physical": 74
+        }
+      },
+      {
+        "id": 311,
+        "name": "Striker A #311",
+        "positions": [
+          "ST"
+        ],
+        "overall": 75,
+        "age": 24,
+        "shirtNumber": 14,
+        "marketValue": 75000000,
+        "attributes": {
+          "pace": 75,
+          "shooting": 75,
+          "passing": 75,
+          "dribbling": 75,
+          "defending": 75,
+          "physical": 75
+        }
+      },
+      {
+        "id": 312,
+        "name": "Striker B #312",
+        "positions": [
+          "ST"
+        ],
+        "overall": 76,
+        "age": 24,
+        "shirtNumber": 15,
+        "marketValue": 76000000,
+        "attributes": {
+          "pace": 76,
+          "shooting": 76,
+          "passing": 76,
+          "dribbling": 76,
+          "defending": 76,
+          "physical": 76
+        }
+      },
+      {
+        "id": 313,
+        "name": "Winger #313",
+        "positions": [
+          "LW"
+        ],
+        "overall": 77,
+        "age": 24,
+        "shirtNumber": 16,
+        "marketValue": 77000000,
+        "attributes": {
+          "pace": 77,
+          "shooting": 77,
+          "passing": 77,
+          "dribbling": 77,
+          "defending": 77,
+          "physical": 77
+        }
+      }
+    ],
+    "TMB|2024": [
+      {
+        "id": 100,
+        "name": "Keeper #100",
+        "positions": [
+          "GK"
+        ],
+        "overall": 78,
+        "age": 24,
+        "shirtNumber": 1,
+        "marketValue": 78000000,
+        "attributes": {
+          "pace": 78,
+          "shooting": 78,
+          "passing": 78,
+          "dribbling": 78,
+          "defending": 78,
+          "physical": 78
+        }
+      },
+      {
+        "id": 101,
+        "name": "Center Back A #101",
+        "positions": [
+          "CB"
+        ],
+        "overall": 79,
+        "age": 24,
+        "shirtNumber": 2,
+        "marketValue": 79000000,
+        "attributes": {
+          "pace": 79,
+          "shooting": 79,
+          "passing": 79,
+          "dribbling": 79,
+          "defending": 79,
+          "physical": 79
+        }
+      },
+      {
+        "id": 102,
+        "name": "Center Back B #102",
+        "positions": [
+          "CB"
+        ],
+        "overall": 80,
+        "age": 24,
+        "shirtNumber": 3,
+        "marketValue": 80000000,
+        "attributes": {
+          "pace": 80,
+          "shooting": 80,
+          "passing": 80,
+          "dribbling": 80,
+          "defending": 80,
+          "physical": 80
+        }
+      },
+      {
+        "id": 103,
+        "name": "Left Back #103",
+        "positions": [
+          "LB"
+        ],
+        "overall": 81,
+        "age": 24,
+        "shirtNumber": 4,
+        "marketValue": 81000000,
+        "attributes": {
+          "pace": 81,
+          "shooting": 81,
+          "passing": 81,
+          "dribbling": 81,
+          "defending": 81,
+          "physical": 81
+        }
+      },
+      {
+        "id": 104,
+        "name": "Right Back #104",
+        "positions": [
+          "RB"
+        ],
+        "overall": 82,
+        "age": 24,
+        "shirtNumber": 5,
+        "marketValue": 82000000,
+        "attributes": {
+          "pace": 82,
+          "shooting": 82,
+          "passing": 82,
+          "dribbling": 82,
+          "defending": 82,
+          "physical": 82
+        }
+      },
+      {
+        "id": 105,
+        "name": "Sweeper #105",
+        "positions": [
+          "CB"
+        ],
+        "overall": 78,
+        "age": 24,
+        "shirtNumber": 6,
+        "marketValue": 78000000,
+        "attributes": {
+          "pace": 78,
+          "shooting": 78,
+          "passing": 78,
+          "dribbling": 78,
+          "defending": 78,
+          "physical": 78
+        }
+      },
+      {
+        "id": 106,
+        "name": "Midfielder A #106",
+        "positions": [
+          "CM"
+        ],
+        "overall": 79,
+        "age": 24,
+        "shirtNumber": 7,
+        "marketValue": 79000000,
+        "attributes": {
+          "pace": 79,
+          "shooting": 79,
+          "passing": 79,
+          "dribbling": 79,
+          "defending": 79,
+          "physical": 79
+        }
+      },
+      {
+        "id": 107,
+        "name": "Midfielder B #107",
+        "positions": [
+          "CM"
+        ],
+        "overall": 80,
+        "age": 24,
+        "shirtNumber": 8,
+        "marketValue": 80000000,
+        "attributes": {
+          "pace": 80,
+          "shooting": 80,
+          "passing": 80,
+          "dribbling": 80,
+          "defending": 80,
+          "physical": 80
+        }
+      },
+      {
+        "id": 108,
+        "name": "Holding Mid #108",
+        "positions": [
+          "CDM"
+        ],
+        "overall": 81,
+        "age": 24,
+        "shirtNumber": 9,
+        "marketValue": 81000000,
+        "attributes": {
+          "pace": 81,
+          "shooting": 81,
+          "passing": 81,
+          "dribbling": 81,
+          "defending": 81,
+          "physical": 81
+        }
+      },
+      {
+        "id": 109,
+        "name": "Left Mid #109",
+        "positions": [
+          "LM"
+        ],
+        "overall": 82,
+        "age": 24,
+        "shirtNumber": 10,
+        "marketValue": 82000000,
+        "attributes": {
+          "pace": 82,
+          "shooting": 82,
+          "passing": 82,
+          "dribbling": 82,
+          "defending": 82,
+          "physical": 82
+        }
+      },
+      {
+        "id": 110,
+        "name": "Right Mid #110",
+        "positions": [
+          "RM"
+        ],
+        "overall": 78,
+        "age": 24,
+        "shirtNumber": 11,
+        "marketValue": 78000000,
+        "attributes": {
+          "pace": 78,
+          "shooting": 78,
+          "passing": 78,
+          "dribbling": 78,
+          "defending": 78,
+          "physical": 78
+        }
+      },
+      {
+        "id": 111,
+        "name": "Striker A #111",
+        "positions": [
+          "ST"
+        ],
+        "overall": 79,
+        "age": 24,
+        "shirtNumber": 12,
+        "marketValue": 79000000,
+        "attributes": {
+          "pace": 79,
+          "shooting": 79,
+          "passing": 79,
+          "dribbling": 79,
+          "defending": 79,
+          "physical": 79
+        }
+      },
+      {
+        "id": 112,
+        "name": "Striker B #112",
+        "positions": [
+          "ST"
+        ],
+        "overall": 80,
+        "age": 24,
+        "shirtNumber": 13,
+        "marketValue": 80000000,
+        "attributes": {
+          "pace": 80,
+          "shooting": 80,
+          "passing": 80,
+          "dribbling": 80,
+          "defending": 80,
+          "physical": 80
+        }
+      },
+      {
+        "id": 113,
+        "name": "Winger #113",
+        "positions": [
+          "LW"
+        ],
+        "overall": 81,
+        "age": 24,
+        "shirtNumber": 14,
+        "marketValue": 81000000,
+        "attributes": {
+          "pace": 81,
+          "shooting": 81,
+          "passing": 81,
+          "dribbling": 81,
+          "defending": 81,
+          "physical": 81
+        }
+      }
+    ],
+    "TMC|2023": [
+      {
+        "id": 200,
+        "name": "Keeper #200",
+        "positions": [
+          "GK"
+        ],
+        "overall": 60,
+        "age": 24,
+        "shirtNumber": 2,
+        "marketValue": 60000000,
+        "attributes": {
+          "pace": 60,
+          "shooting": 60,
+          "passing": 60,
+          "dribbling": 60,
+          "defending": 60,
+          "physical": 60
+        }
+      },
+      {
+        "id": 201,
+        "name": "Center Back A #201",
+        "positions": [
+          "CB"
+        ],
+        "overall": 61,
+        "age": 24,
+        "shirtNumber": 3,
+        "marketValue": 61000000,
+        "attributes": {
+          "pace": 61,
+          "shooting": 61,
+          "passing": 61,
+          "dribbling": 61,
+          "defending": 61,
+          "physical": 61
+        }
+      },
+      {
+        "id": 202,
+        "name": "Center Back B #202",
+        "positions": [
+          "CB"
+        ],
+        "overall": 62,
+        "age": 24,
+        "shirtNumber": 4,
+        "marketValue": 62000000,
+        "attributes": {
+          "pace": 62,
+          "shooting": 62,
+          "passing": 62,
+          "dribbling": 62,
+          "defending": 62,
+          "physical": 62
+        }
+      },
+      {
+        "id": 203,
+        "name": "Left Back #203",
+        "positions": [
+          "LB"
+        ],
+        "overall": 63,
+        "age": 24,
+        "shirtNumber": 5,
+        "marketValue": 63000000,
+        "attributes": {
+          "pace": 63,
+          "shooting": 63,
+          "passing": 63,
+          "dribbling": 63,
+          "defending": 63,
+          "physical": 63
+        }
+      },
+      {
+        "id": 204,
+        "name": "Right Back #204",
+        "positions": [
+          "RB"
+        ],
+        "overall": 64,
+        "age": 24,
+        "shirtNumber": 6,
+        "marketValue": 64000000,
+        "attributes": {
+          "pace": 64,
+          "shooting": 64,
+          "passing": 64,
+          "dribbling": 64,
+          "defending": 64,
+          "physical": 64
+        }
+      },
+      {
+        "id": 205,
+        "name": "Sweeper #205",
+        "positions": [
+          "CB"
+        ],
+        "overall": 60,
+        "age": 24,
+        "shirtNumber": 7,
+        "marketValue": 60000000,
+        "attributes": {
+          "pace": 60,
+          "shooting": 60,
+          "passing": 60,
+          "dribbling": 60,
+          "defending": 60,
+          "physical": 60
+        }
+      },
+      {
+        "id": 206,
+        "name": "Midfielder A #206",
+        "positions": [
+          "CM"
+        ],
+        "overall": 61,
+        "age": 24,
+        "shirtNumber": 8,
+        "marketValue": 61000000,
+        "attributes": {
+          "pace": 61,
+          "shooting": 61,
+          "passing": 61,
+          "dribbling": 61,
+          "defending": 61,
+          "physical": 61
+        }
+      },
+      {
+        "id": 207,
+        "name": "Midfielder B #207",
+        "positions": [
+          "CM"
+        ],
+        "overall": 62,
+        "age": 24,
+        "shirtNumber": 9,
+        "marketValue": 62000000,
+        "attributes": {
+          "pace": 62,
+          "shooting": 62,
+          "passing": 62,
+          "dribbling": 62,
+          "defending": 62,
+          "physical": 62
+        }
+      },
+      {
+        "id": 208,
+        "name": "Holding Mid #208",
+        "positions": [
+          "CDM"
+        ],
+        "overall": 63,
+        "age": 24,
+        "shirtNumber": 10,
+        "marketValue": 63000000,
+        "attributes": {
+          "pace": 63,
+          "shooting": 63,
+          "passing": 63,
+          "dribbling": 63,
+          "defending": 63,
+          "physical": 63
+        }
+      },
+      {
+        "id": 209,
+        "name": "Left Mid #209",
+        "positions": [
+          "LM"
+        ],
+        "overall": 64,
+        "age": 24,
+        "shirtNumber": 11,
+        "marketValue": 64000000,
+        "attributes": {
+          "pace": 64,
+          "shooting": 64,
+          "passing": 64,
+          "dribbling": 64,
+          "defending": 64,
+          "physical": 64
+        }
+      },
+      {
+        "id": 210,
+        "name": "Right Mid #210",
+        "positions": [
+          "RM"
+        ],
+        "overall": 60,
+        "age": 24,
+        "shirtNumber": 12,
+        "marketValue": 60000000,
+        "attributes": {
+          "pace": 60,
+          "shooting": 60,
+          "passing": 60,
+          "dribbling": 60,
+          "defending": 60,
+          "physical": 60
+        }
+      },
+      {
+        "id": 211,
+        "name": "Striker A #211",
+        "positions": [
+          "ST"
+        ],
+        "overall": 61,
+        "age": 24,
+        "shirtNumber": 13,
+        "marketValue": 61000000,
+        "attributes": {
+          "pace": 61,
+          "shooting": 61,
+          "passing": 61,
+          "dribbling": 61,
+          "defending": 61,
+          "physical": 61
+        }
+      },
+      {
+        "id": 212,
+        "name": "Striker B #212",
+        "positions": [
+          "ST"
+        ],
+        "overall": 62,
+        "age": 24,
+        "shirtNumber": 14,
+        "marketValue": 62000000,
+        "attributes": {
+          "pace": 62,
+          "shooting": 62,
+          "passing": 62,
+          "dribbling": 62,
+          "defending": 62,
+          "physical": 62
+        }
+      },
+      {
+        "id": 213,
+        "name": "Winger #213",
+        "positions": [
+          "LW"
+        ],
+        "overall": 63,
+        "age": 24,
+        "shirtNumber": 15,
+        "marketValue": 63000000,
+        "attributes": {
+          "pace": 63,
+          "shooting": 63,
+          "passing": 63,
+          "dribbling": 63,
+          "defending": 63,
+          "physical": 63
+        }
+      }
+    ]
+  },
+  "dataVersion": "fixture-1"
+}

@@ -1,35 +1,70 @@
 # DraftChamp
 
-A football "draft roulette" game: spin a club+season combo, draft one player
-per round into a formation slot, and once your XI is complete, simulate a
-season from it and share the result.
+A football draft game: spin a club-season, draft one player per round into a
+formation slot, and once your XI is complete, play out a season and find out
+which real Premier League records your squad broke.
 
-v1 status: the draft loop, formations, simulation engine, and share/result
-flow are built and tested. **No real league data yet** — `data/league-data.json`
-under `src/leagues/premier-fiction/` ships as an empty stub; see the README
-next to it for the schema and how real data will be added.
+You don't pick a challenge up front — you build the squad, then the result
+tells you what you achieved.
 
-## Develop
+## Architecture
 
-```bash
-npm install
-npm run dev       # start the dev server
-npm test          # run unit tests (Vitest)
-npm run build     # type-check + production build
+A monorepo with a clear split: **the server owns the game, the client draws it.**
+
+```
+apps/
+  api/    FastAPI backend — dataset, draft rules, season simulation,
+          record evaluation. The single source of truth.
+  web/    React + Vite frontend — renders the pitch and collects taps.
+          Never computes a result.
 ```
 
-While there's no real league data, append `?fixture=test` to the dev server
-URL to play through the full loop against a small synthetic league
-(`tests/fixtures/test-league.ts`) — dev-only, not shipped in production
-builds.
+The client only ever tells the server *which player it placed where*; ratings,
+costs and outcomes always come from the server's own data, and every request is
+re-validated (unknown players, duplicates, out-of-position placements and
+budget overspends are all rejected).
 
-## Project layout
+## Running it
 
-- `src/leagues/` — league data contract (`types.ts`), registry, and each
-  league's data module (currently just `premier-fiction`, a stub).
-- `src/engine/` — pure, framework-free game logic: formations/eligibility,
-  the draft/spin engine, the season simulation, and the seeded RNG.
-- `src/state/` — the draft session's `useReducer` + Context state.
-- `src/components/`, `src/screens/` — the UI.
-- `src/utils/` — canvas result export and Web Share API (+ download fallback).
-- `tests/` — unit tests for `src/engine/*` and the shared test fixture.
+```bash
+npm run install:all   # installs both apps (npm + uv)
+npm run dev           # API on :8000, web on :5173
+npm test              # pytest + vitest
+```
+
+There is no real dataset yet, so the default league file is an empty stub. To
+play against a synthetic league:
+
+```bash
+npm run dev:fixture
+```
+
+## Game modes
+
+Modes are *draft-rule variants* — they change what you're allowed to draft, so
+they're chosen before the draft starts:
+
+- **Classic** — spin any club-season.
+- **Budget Draft** — every player costs money; build the best XI under a cap.
+- **Peak XI** — pick one club and mix eras; spins are restricted to that club's
+  own seasons.
+- **Head-to-Head** — two players, one device, drafting from the same reveals.
+
+Records are *not* a mode. Every completed XI is scored against all of them.
+
+## Adding the real dataset
+
+`apps/api/app/data/league_data.json` is the seam. Point
+`DRAFTCHAMP_LEAGUE_FILE` at another file to swap datasets without touching any
+code — see the README next to it for the expected schema.
+
+## Layout
+
+- `apps/api/app/engine/` — formations/eligibility, season simulation, records,
+  and the seeded RNG. Pure logic, no framework.
+- `apps/api/app/main.py` — the HTTP surface.
+- `apps/web/src/api/` — typed API client mirroring the server's models.
+- `apps/web/src/game/` — client-side eligibility helpers (for instant slot
+  highlighting) and the bootstrapped game-data context.
+- `apps/web/src/state/` — draft and duel session reducers.
+- `apps/web/src/components/`, `src/screens/` — the UI.
