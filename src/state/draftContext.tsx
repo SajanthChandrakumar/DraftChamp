@@ -2,10 +2,12 @@ import { createContext, useContext, useReducer, type Dispatch, type ReactNode } 
 import type { Combo, Player, PlayerId } from "../leagues/types";
 import type { FormationId, SlotId } from "../engine/formations";
 import { isDraftComplete } from "../engine/formations";
+import type { GameModeId } from "../engine/modes";
 
 export type DraftPhase = "picking-formation" | "spinning" | "drafting" | "complete";
 
 export interface DraftState {
+  mode: GameModeId;
   formationId: FormationId | null;
   filledSlots: Record<SlotId, Player>;
   usedPlayerIds: Set<PlayerId>;
@@ -15,10 +17,25 @@ export interface DraftState {
   selectedPlayerId: PlayerId | null;
   round: number; // 1..11
   phase: DraftPhase;
+  /** Record Chase: which real PL record this session is trying to beat. */
+  targetRecordId: string | null;
+  /** Budget Draft: total budget and how much of it has been spent so far. */
+  budgetCap: number | null;
+  budgetSpent: number;
+  /** Peak XI: the one club whose seasons the spin pool is restricted to. */
+  peakClubCode: string | null;
+}
+
+export interface StartSessionPayload {
+  formationId: FormationId;
+  mode: GameModeId;
+  targetRecordId?: string;
+  budgetCap?: number;
+  peakClubCode?: string;
 }
 
 export type DraftAction =
-  | { type: "SELECT_FORMATION"; formationId: FormationId }
+  | ({ type: "START_SESSION" } & StartSessionPayload)
   | { type: "SPIN_COMBO"; combo: Combo; squad: Player[] }
   | { type: "SELECT_PLAYER"; playerId: PlayerId | null }
   | { type: "FILL_SLOT"; slotId: SlotId }
@@ -27,6 +44,7 @@ export type DraftAction =
 
 export function createInitialDraftState(): DraftState {
   return {
+    mode: "classic",
     formationId: null,
     filledSlots: {},
     usedPlayerIds: new Set(),
@@ -36,6 +54,10 @@ export function createInitialDraftState(): DraftState {
     selectedPlayerId: null,
     round: 1,
     phase: "picking-formation",
+    targetRecordId: null,
+    budgetCap: null,
+    budgetSpent: 0,
+    peakClubCode: null,
   };
 }
 
@@ -50,10 +72,14 @@ function findSelectedPlayer(state: DraftState): Player | null {
 
 export function draftReducer(state: DraftState, action: DraftAction): DraftState {
   switch (action.type) {
-    case "SELECT_FORMATION":
+    case "START_SESSION":
       return {
         ...createInitialDraftState(),
         formationId: action.formationId,
+        mode: action.mode,
+        targetRecordId: action.targetRecordId ?? null,
+        budgetCap: action.budgetCap ?? null,
+        peakClubCode: action.peakClubCode ?? null,
         phase: "spinning",
       };
 
@@ -76,6 +102,9 @@ export function draftReducer(state: DraftState, action: DraftAction): DraftState
       if (!player) return state;
       if (state.filledSlots[action.slotId]) return state;
 
+      const cost = player.marketValue ?? 0;
+      if (state.budgetCap != null && state.budgetSpent + cost > state.budgetCap) return state;
+
       const filledSlots = { ...state.filledSlots, [action.slotId]: player };
       const usedPlayerIds = new Set(state.usedPlayerIds);
       usedPlayerIds.add(player.id);
@@ -85,6 +114,7 @@ export function draftReducer(state: DraftState, action: DraftAction): DraftState
         ...state,
         filledSlots,
         usedPlayerIds,
+        budgetSpent: state.budgetSpent + cost,
         selectedPlayerId: null,
         currentCombo: null,
         currentSquad: null,

@@ -16,6 +16,7 @@ function makePlayer(
     overall,
     age: 24,
     shirtNumber: id % 99,
+    marketValue: overall * 1_000_000,
     attributes: {
       pace: overall,
       shooting: overall,
@@ -50,6 +51,7 @@ function makeSquad(startId: number, overallBase: number): Player[] {
 }
 
 const TEAM_A_2023 = makeSquad(1, 70);
+const TEAM_A_2024 = makeSquad(300, 74);
 const TEAM_B_2024 = makeSquad(100, 78);
 const TEAM_C_2023 = makeSquad(200, 60);
 
@@ -64,11 +66,13 @@ export const TEST_LEAGUE_FIXTURE: LeagueData = {
   years: [2023, 2024],
   combos: [
     ["TMA", 2023],
+    ["TMA", 2024],
     ["TMB", 2024],
     ["TMC", 2023],
   ],
   squads: {
     "TMA|2023": TEAM_A_2023,
+    "TMA|2024": TEAM_A_2024,
     "TMB|2024": TEAM_B_2024,
     "TMC|2023": TEAM_C_2023,
   },

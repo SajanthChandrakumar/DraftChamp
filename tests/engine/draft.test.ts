@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { availablePlayers, pickCombo, resolveSquad } from "../../src/engine/draft";
+import { availablePlayers, combosForClub, pickCombo, resolveSquad } from "../../src/engine/draft";
 import { TEST_LEAGUE_FIXTURE } from "../fixtures/test-league";
-import type { Combo } from "../../src/leagues/types";
+import type { Combo, LeagueData } from "../../src/leagues/types";
 
 describe("pickCombo", () => {
   it("selects the combo at the index the rng implies", () => {
@@ -33,5 +33,30 @@ describe("availablePlayers", () => {
     const available = availablePlayers(squad, used);
     expect(available.find((p) => p.id === squad[0].id)).toBeUndefined();
     expect(available.length).toBe(squad.length - 1);
+  });
+});
+
+describe("combosForClub", () => {
+  const leagueData: LeagueData = {
+    ...TEST_LEAGUE_FIXTURE,
+    combos: [
+      ["TMA", 2023],
+      ["TMA", 2024],
+      ["TMA", 2025],
+      ["TMB", 2024],
+    ],
+  };
+
+  it("returns only the combos for the requested club, across its seasons", () => {
+    const combos = combosForClub(leagueData, "TMA");
+    expect(combos).toEqual([
+      ["TMA", 2023],
+      ["TMA", 2024],
+      ["TMA", 2025],
+    ]);
+  });
+
+  it("returns an empty array for a club with no combos", () => {
+    expect(combosForClub(leagueData, "ZZZ")).toEqual([]);
   });
 });

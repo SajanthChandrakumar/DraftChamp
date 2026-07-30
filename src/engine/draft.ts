@@ -22,4 +22,14 @@ export function availablePlayers(
   return squad.filter((p) => !usedPlayerIds.has(p.id));
 }
 
+/**
+ * Peak XI mode: instead of spinning across every club, restrict the combo
+ * pool to one chosen club's own seasons — each spin still reveals a full
+ * squad, but every squad is a different era of the same club, so the draft
+ * naturally mixes years.
+ */
+export function combosForClub(leagueData: LeagueData, teamCode: string): Combo[] {
+  return leagueData.combos.filter((combo) => combo[0] === teamCode);
+}
+
 export { eligibleFamilies, openSlotsFor, isDraftComplete } from "./formations";

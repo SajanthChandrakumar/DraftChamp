@@ -1,8 +1,9 @@
 import { useMemo, useState } from "react";
 import type { LeagueData, Player } from "../leagues/types";
-import { availablePlayers, pickCombo, resolveSquad } from "../engine/draft";
+import { availablePlayers, combosForClub, pickCombo, resolveSquad } from "../engine/draft";
 import { openSlotsFor } from "../engine/formations";
 import type { SlotId } from "../engine/formations";
+import { getRecordById } from "../engine/records";
 import { ComboReveal } from "../components/ComboReveal";
 import { Pitch } from "../components/Pitch";
 import { PlayerCard } from "../components/PlayerCard";
@@ -36,8 +37,26 @@ export function DraftScreen({ leagueData }: DraftScreenProps) {
     return new Set(openSlotsFor(selectedPlayer, state.formationId, state.filledSlots).map((s) => s.id));
   }, [selectedPlayer, state.formationId, state.filledSlots]);
 
+  const comboPool = useMemo(() => {
+    if (state.mode === "peak-xi" && state.peakClubCode) {
+      return combosForClub(leagueData, state.peakClubCode);
+    }
+    return leagueData.combos;
+  }, [leagueData, state.mode, state.peakClubCode]);
+
+  const remainingBudget = state.budgetCap != null ? state.budgetCap - state.budgetSpent : null;
+  const targetRecord = state.targetRecordId ? getRecordById(state.targetRecordId) : null;
+
+  const canAct = useMemo(() => {
+    if (!state.formationId || state.phase !== "drafting") return true;
+    return available.some((p) => {
+      if (remainingBudget != null && (p.marketValue ?? 0) > remainingBudget) return false;
+      return openSlotsFor(p, state.formationId!, state.filledSlots).length > 0;
+    });
+  }, [available, state.formationId, state.filledSlots, state.phase, remainingBudget]);
+
   const handleSpin = () => {
-    const combo = pickCombo(leagueData.combos, Math.random);
+    const combo = pickCombo(comboPool, Math.random);
     const squadForCombo = resolveSquad(leagueData, combo);
     dispatch({ type: "SPIN_COMBO", combo, squad: squadForCombo });
   };
@@ -77,6 +96,17 @@ export function DraftScreen({ leagueData }: DraftScreenProps) {
 
   return (
     <div className="draft-screen">
+      {targetRecord && (
+        <div className="draft-screen__banner">
+          Chasing: {targetRecord.label} ({targetRecord.holder}, {targetRecord.season})
+        </div>
+      )}
+      {remainingBudget != null && (
+        <div className="draft-screen__banner draft-screen__banner--budget">
+          Budget remaining: €{(remainingBudget / 1_000_000).toFixed(1)}M / €
+          {(state.budgetCap! / 1_000_000).toFixed(1)}M
+        </div>
+      )}
       <div className="draft-screen__board">
         <Pitch
           formationId={state.formationId}
@@ -87,6 +117,11 @@ export function DraftScreen({ leagueData }: DraftScreenProps) {
         <div className="draft-screen__side">
           <RoundIndicator round={state.round} />
           <ComboReveal combo={state.currentCombo} teamName={teamName} onSpin={handleSpin} />
+          {state.phase === "drafting" && !canAct && (
+            <button type="button" className="reveal-skip-button" onClick={handleSpin}>
+              No usable pick in this reveal — spin again
+            </button>
+          )}
           {state.phase === "drafting" && (
             <div className="draft-screen__squad">
               {available.map((player) => (
@@ -95,10 +130,15 @@ export function DraftScreen({ leagueData }: DraftScreenProps) {
                   player={player}
                   isSelected={player.id === state.selectedPlayerId}
                   onTap={() => handleSelectPlayer(player.id)}
+                  cost={remainingBudget != null ? player.marketValue ?? 0 : undefined}
+                  disabled={remainingBudget != null && (player.marketValue ?? 0) > remainingBudget}
                 />
               ))}
             </div>
           )}
+          <button type="button" className="formation-picker__back" onClick={() => dispatch({ type: "RESET" })}>
+            Restart this draft
+          </button>
         </div>
       </div>
     </div>
