@@ -29,6 +29,18 @@ export function DuelDraftScreen() {
     [state.currentSquad, state.usedPlayerIds]
   );
 
+  // Same as the solo draft: players with no open slot left are dropped from
+  // the reveal rather than shown greyed out.
+  const draftable = useMemo(
+    () =>
+      activeFormation
+        ? available.filter(
+            (p) => openSlotsFor(p, activeFormation, activePlayers).length > 0
+          )
+        : available,
+    [available, activeFormation, activePlayers]
+  );
+
   const selectedPlayer = available.find((p) => p.id === state.selectedPlayerId) ?? null;
 
   const eligibleSlotIds = useMemo(() => {
@@ -119,19 +131,14 @@ export function DuelDraftScreen() {
                 </button>
               )}
               <div className="draft-screen__squad">
-                {available.map((player) => {
-                  const positionTaken =
-                    openSlotsFor(player, activeFormation, activePlayers).length === 0;
-                  return (
-                    <PlayerCard
-                      key={player.id}
-                      player={player}
-                      isSelected={player.id === state.selectedPlayerId}
-                      onTap={() => dispatch({ type: "SELECT_PLAYER", playerId: player.id })}
-                      disabled={positionTaken}
-                    />
-                  );
-                })}
+                {draftable.map((player) => (
+                  <PlayerCard
+                    key={player.id}
+                    player={player}
+                    isSelected={player.id === state.selectedPlayerId}
+                    onTap={() => dispatch({ type: "SELECT_PLAYER", playerId: player.id })}
+                  />
+                ))}
               </div>
             </>
           )}

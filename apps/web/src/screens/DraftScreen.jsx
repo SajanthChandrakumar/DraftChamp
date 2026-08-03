@@ -37,6 +37,19 @@ export function DraftScreen() {
     [squad, state.usedPlayerIds]
   );
 
+  // A player whose positions are all filled can never be placed this round, so
+  // they're dropped from the reveal entirely rather than shown greyed out —
+  // the list stays short and everything left in it is actually pickable.
+  const draftable = useMemo(
+    () =>
+      state.formation
+        ? available.filter(
+            (p) => openSlotsFor(p, state.formation, filledPlayers).length > 0
+          )
+        : available,
+    [available, state.formation, filledPlayers]
+  );
+
   const selectedPlayer =
     available.find((p) => p.id === state.selectedPlayerId) ??
     Object.values(state.filled).find((e) => e.player.id === state.selectedPlayerId)?.player ??
@@ -175,22 +188,18 @@ export function DraftScreen() {
           )}
           {state.phase === "drafting" && (
             <div className="draft-screen__squad">
-              {available.map((player) => {
-                const overBudget =
-                  remainingBudget != null && (player.marketValue ?? 0) > remainingBudget;
-                const positionTaken =
-                  openSlotsFor(player, state.formation, filledPlayers).length === 0;
-                return (
-                  <PlayerCard
-                    key={player.id}
-                    player={player}
-                    isSelected={player.id === state.selectedPlayerId}
-                    onTap={() => handleSelectPlayer(player.id)}
-                    cost={remainingBudget != null ? (player.marketValue ?? 0) : undefined}
-                    disabled={overBudget || positionTaken}
-                  />
-                );
-              })}
+              {draftable.map((player) => (
+                <PlayerCard
+                  key={player.id}
+                  player={player}
+                  isSelected={player.id === state.selectedPlayerId}
+                  onTap={() => handleSelectPlayer(player.id)}
+                  cost={remainingBudget != null ? (player.marketValue ?? 0) : undefined}
+                  disabled={
+                    remainingBudget != null && (player.marketValue ?? 0) > remainingBudget
+                  }
+                />
+              ))}
             </div>
           )}
           {/* The Daily is one attempt at one shared puzzle — restarting it
