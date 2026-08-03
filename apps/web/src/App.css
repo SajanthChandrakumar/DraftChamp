@@ -1423,9 +1423,31 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* Unavailable — every position this player covers is already filled (or they're
+   priced out in Budget Draft). Kept on screen so you can still read the squad,
+   but pushed well back: desaturated and darkened so it never competes with a
+   card you can actually pick.
+
+   The fade rides inside `filter` rather than as a plain `opacity` declaration:
+   `.draft-screen__squad .player-card` deals in with a `both`-filled animation,
+   and a CSS animation outranks a normal declaration, so a bare `opacity` here
+   would silently lose the cascade. */
 .player-card:disabled {
-  opacity: 0.45;
+  filter: grayscale(0.9) brightness(0.55) opacity(0.5);
   cursor: default;
+  pointer-events: none;
+  box-shadow: none;
+}
+
+/* Rarity colouring is a reward for a pick that's on offer — mute it here so a
+   dimmed legendary doesn't still glow brighter than a live standard card. */
+.player-card:disabled .player-card__overall {
+  color: var(--text-muted);
+  text-shadow: none;
+}
+
+.player-card:disabled .player-card__shine {
+  display: none;
 }
 
 /* ---------- Duel (head-to-head) ---------- */
