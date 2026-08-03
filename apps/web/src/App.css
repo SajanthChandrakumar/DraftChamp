@@ -875,41 +875,128 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  min-height: calc(100svh - 64px);
   gap: var(--space-6);
-  padding: var(--space-5);
+  padding-bottom: var(--space-6);
   text-align: center;
   animation: rise-in 0.4s ease-out both;
 }
 
+/* The hero is a deliberate, fixed-dark "under the floodlights" band —
+   independent of the light/dark site theme, the way a stadium doesn't
+   change color with the weather. It always breaks out full-bleed. */
 .mode-select__hero {
+  position: relative;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-2);
-  max-width: 640px;
+  gap: var(--space-3);
+  max-width: none;
+  padding: var(--space-7) var(--space-5) calc(var(--space-7) + 36px);
+  overflow: hidden;
+  color: var(--chalk-50);
+  background:
+    radial-gradient(640px 420px at 18% 8%, rgba(200, 146, 47, 0.4), transparent 62%),
+    radial-gradient(760px 480px at 88% -6%, rgba(63, 122, 88, 0.5), transparent 58%),
+    linear-gradient(165deg, #0a1710 0%, #0d1f16 55%, #122a1e 100%);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 40px), 0 100%);
 }
 
-.mode-select__eyebrow {
+.mode-select__hero-beam {
+  position: absolute;
+  top: -30%;
+  width: 46%;
+  height: 170%;
+  background: linear-gradient(100deg, transparent 42%, rgba(243, 241, 231, 0.07) 50%, transparent 58%);
+  pointer-events: none;
+  animation: beam-drift 9s ease-in-out infinite alternate;
+}
+
+.mode-select__hero-beam--a {
+  left: -14%;
+}
+
+.mode-select__hero-beam--b {
+  right: -18%;
+  animation-delay: -4s;
+}
+
+@keyframes beam-drift {
+  from {
+    transform: translateX(-6%) rotate(0deg);
+  }
+  to {
+    transform: translateX(6%) rotate(2deg);
+  }
+}
+
+.mode-select__kicker {
+  position: relative;
   font-weight: 700;
-  font-size: 13px;
-  letter-spacing: 0.1em;
+  font-size: 12px;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--brass-500);
+  padding: 5px 14px;
+  border: 1px solid rgba(200, 146, 47, 0.4);
+  border-radius: 999px;
+  background: rgba(200, 146, 47, 0.08);
 }
 
 .mode-select__title {
-  font-size: clamp(40px, 7vw, 64px);
-  line-height: 0.95;
+  position: relative;
+  font-size: clamp(64px, 12vw, 132px);
+  line-height: 0.86;
+  letter-spacing: -0.01em;
+  margin: 0;
+  background: linear-gradient(100deg, var(--chalk-50) 25%, var(--brass-500) 42%, var(--chalk-50) 58%);
+  background-size: 240% auto;
+  background-position: 0% center;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: title-shimmer 6s ease-in-out infinite;
+}
+
+@keyframes title-shimmer {
+  0%,
+  100% {
+    background-position: 0% center;
+  }
+  50% {
+    background-position: 100% center;
+  }
+}
+
+.mode-select__title-sub {
+  display: block;
+  font-size: clamp(20px, 3vw, 30px);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--chalk-50);
+  opacity: 0.75;
+  -webkit-background-clip: initial;
+  background-clip: initial;
+  animation: none;
+}
+
+.mode-select__hero .mode-select__intro {
+  position: relative;
+  max-width: 46ch;
+  color: rgba(243, 241, 231, 0.72);
 }
 
 .mode-select__options {
+  position: relative;
+  z-index: 1;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: var(--space-4);
   width: 100%;
   max-width: 820px;
+  margin-top: -56px;
+  padding: 0 var(--space-5);
 }
 
 .mode-select__option {
@@ -921,7 +1008,7 @@
   border: 1px solid var(--border);
   border-left: 3px solid var(--border);
   background: var(--surface);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-md);
   color: var(--text);
   text-align: left;
   overflow: hidden;
@@ -931,17 +1018,17 @@
 .mode-select__option:hover {
   border-color: var(--accent);
   border-left-color: var(--accent);
-  transform: translateY(-3px);
+  transform: translateY(-4px);
   box-shadow: var(--glow-accent);
 }
 
 .mode-select__option-index {
   position: absolute;
-  top: -6px;
-  right: 6px;
+  top: -10px;
+  right: 4px;
   font-family: var(--font-display);
   font-weight: 900;
-  font-size: 56px;
+  font-size: 64px;
   line-height: 1;
   color: var(--text);
   opacity: 0.06;
@@ -970,6 +1057,12 @@
 
 .mode-select__history:hover {
   color: var(--accent);
+}
+
+@media (max-width: 640px) {
+  .mode-select__options {
+    margin-top: -36px;
+  }
 }
 
 /* ---------- Setup pickers (record / club) shared with formation-picker ---------- */

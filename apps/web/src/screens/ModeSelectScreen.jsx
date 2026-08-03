@@ -6,8 +6,13 @@ export function ModeSelectScreen({ onSelect, onShowHistory }) {
   return (
     <div className="mode-select">
       <div className="mode-select__hero">
-        <span className="mode-select__eyebrow">{records.length} Premier League records on the line</span>
-        <h1 className="mode-select__title">Build an XI.</h1>
+        <div className="mode-select__hero-beam mode-select__hero-beam--a" aria-hidden="true" />
+        <div className="mode-select__hero-beam mode-select__hero-beam--b" aria-hidden="true" />
+        <span className="mode-select__kicker">{records.length} Premier League records on the line</span>
+        <h1 className="mode-select__title">
+          Build an XI.
+          <span className="mode-select__title-sub">Rewrite the history books.</span>
+        </h1>
         <p className="mode-select__intro">
           Spin a club-season, draft your eleven, then find out which Premier League records your
           squad broke.

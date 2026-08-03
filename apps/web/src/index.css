@@ -82,6 +82,7 @@
 body {
   margin: 0;
   min-height: 100svh;
+  overflow-x: hidden;
   background:
     radial-gradient(900px 500px at 12% -8%, rgba(200, 146, 47, 0.12), transparent 60%),
     radial-gradient(1000px 700px at 108% 8%, rgba(63, 122, 88, 0.22), transparent 55%),
