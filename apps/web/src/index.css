@@ -10,6 +10,14 @@
   --brass-500: #c8922f;
   --brass-600: #a8791f;
 
+  /* Casino accents — used sparingly and with intent, not as decoration:
+     neon for the "go" action and a strong player, pink only for the
+     celebratory moment of actually beating a record. Gold (brass, above)
+     stays reserved for the rare top-tier player. */
+  --neon-500: #39ff8a;
+  --neon-600: #1fd66d;
+  --pink-500: #ff3d81;
+
   --bg: var(--pitch-950);
   --text: var(--chalk-50);
   --text-muted: #9fb8a8;
