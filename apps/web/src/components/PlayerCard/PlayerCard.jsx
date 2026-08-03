@@ -24,6 +24,9 @@ function formatCost(value) {
   return `€${value}`;
 }
 
+const PARTICLE_COUNT = 6;
+const PARTICLE_INDEXES = Array.from({ length: PARTICLE_COUNT }, (_, i) => i);
+
 export function PlayerCard({ player, isSelected, onTap, cost, disabled = false }) {
   const ref = useRef(null);
 
@@ -58,6 +61,10 @@ export function PlayerCard({ player, isSelected, onTap, cost, disabled = false }
       disabled={disabled}
     >
       <span className="player-card__shine" aria-hidden="true" />
+      {isSelected &&
+        PARTICLE_INDEXES.map((i) => (
+          <span key={i} className="player-card__particle" style={{ "--i": i }} aria-hidden="true" />
+        ))}
       <div className="player-card__header">
         <span className="player-card__overall">{player.overall}</span>
         <span className="player-card__positions">{player.positions.join(" / ")}</span>
