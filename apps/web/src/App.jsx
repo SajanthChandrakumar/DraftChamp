@@ -6,6 +6,7 @@ import { DuelProvider } from "./state/duelContext";
 import { ModeSelectScreen } from "./screens/ModeSelectScreen";
 import { SoloFlow } from "./screens/SoloFlow";
 import { DuelFlow } from "./screens/DuelFlow";
+import { DailyFlow } from "./screens/DailyFlow";
 import { HistoryScreen } from "./screens/HistoryScreen";
 import "./App.css";
 
@@ -75,6 +76,10 @@ export default function App() {
         <DuelProvider>
           <DuelFlow onBackToModes={() => setMode(null)} />
         </DuelProvider>
+      ) : mode === "daily" ? (
+        <DraftProvider>
+          <DailyFlow onBackToModes={() => setMode(null)} />
+        </DraftProvider>
       ) : (
         <DraftProvider key={mode}>
           <SoloFlow mode={mode} onBackToModes={() => setMode(null)} />

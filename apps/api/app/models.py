@@ -31,7 +31,7 @@ Position = Literal[
     "CF",
 ]
 
-GameMode = Literal["classic", "budget", "peak-xi", "duel"]
+GameMode = Literal["classic", "budget", "peak-xi", "duel", "daily"]
 
 
 class PlayerAttributes(BaseModel):
@@ -98,6 +98,18 @@ class SquadResponse(BaseModel):
     season: int
     team_name: str = Field(serialization_alias="teamName")
     players: list[Player]
+
+    model_config = {"populate_by_name": True}
+
+
+class DailyDraftResponse(BaseModel):
+    """The shared puzzle for one day: a fixed formation and a fixed run of
+    reveals, both derived from the date."""
+
+    date: str
+    seed: int
+    formation_id: str = Field(serialization_alias="formationId")
+    combos: list[Combo]
 
     model_config = {"populate_by_name": True}
 

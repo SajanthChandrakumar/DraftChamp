@@ -44,3 +44,9 @@ export function addHistoryEntry(entry, storage = window.localStorage) {
 export function clearHistory(storage = window.localStorage) {
   writeAll([], storage);
 }
+
+/** The Daily Draft is one attempt per day, so a finished entry for a date is
+ * also the record of having played it. */
+export function findDailyEntry(date, storage = window.localStorage) {
+  return readAll(storage).find((e) => e.kind === "daily" && e.dailyDate === date) ?? null;
+}

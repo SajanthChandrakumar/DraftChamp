@@ -9,7 +9,12 @@ import { Pitch } from "../components/Pitch";
 import { PlayerCard } from "../components/PlayerCard";
 import { RatingScaler } from "../components/RatingScaler";
 import { RoundIndicator } from "../components/RoundIndicator";
-import { playersOf, useDraftDispatch, useDraftState } from "../state/draftContext";
+import {
+  nextScriptedCombo,
+  playersOf,
+  useDraftDispatch,
+  useDraftState,
+} from "../state/draftContext";
 
 const EMPTY_SQUAD = [];
 const SPIN_MIN_MS = 900;
@@ -73,7 +78,8 @@ export function DraftScreen() {
   const handleSpin = async () => {
     setSpinError(null);
 
-    const combo = pickRandomCombo(comboPool);
+    // Daily Draft follows a fixed script; every other mode spins at random.
+    const combo = nextScriptedCombo(state) ?? pickRandomCombo(comboPool);
     const labelFor = (c) => `${league.teams.find((t) => t.code === c.team)?.name ?? c.team} ${c.season}`;
     setSpinReel(buildSpinReel(comboPool.map(labelFor), labelFor(combo)));
 
@@ -180,13 +186,18 @@ export function DraftScreen() {
               })}
             </div>
           )}
-          <button
-            type="button"
-            className="formation-picker__back"
-            onClick={() => dispatch({ type: "RESET" })}
-          >
-            Restart this draft
-          </button>
+          {/* The Daily is one attempt at one shared puzzle — restarting it
+              would defeat the point, so that way out is only offered
+              in the modes you can replay freely. */}
+          {state.mode !== "daily" && (
+            <button
+              type="button"
+              className="formation-picker__back"
+              onClick={() => dispatch({ type: "RESET" })}
+            >
+              Restart this draft
+            </button>
+          )}
         </div>
       </div>
     </div>

@@ -13,7 +13,10 @@ function SoloHistoryRow({ entry }) {
   return (
     <div className="history-entry__row">
       <div className="history-entry__main">
-        <span className="history-entry__formation">{entry.formationId}</span>
+        <span className="history-entry__formation">
+          {entry.kind === "daily" && <span className="history-entry__badge">Daily</span>}
+          {entry.formationId}
+        </span>
         <span className="history-entry__record">
           {season.wins}-{season.draws}-{season.losses} &middot; {season.points} pts &middot; {season.tier}
         </span>

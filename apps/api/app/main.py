@@ -13,6 +13,7 @@ import os
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.engine import daily as daily_engine
 from app.engine import records as records_engine
 from app.engine.formations import FORMATIONS, POS_TO_FAM, eligible_families
 from app.engine.modes import DEFAULT_BUDGET_CAP, GAME_MODES
@@ -20,6 +21,7 @@ from app.engine.simulation import simulate_season
 from app.league import load_league
 from app.models import (
     ChallengeResult,
+    DailyDraftResponse,
     Formation,
     FormationSlot,
     LeagueMeta,
@@ -128,6 +130,30 @@ def get_records() -> list[RecordInfo]:
         )
         for r in records_engine.PL_RECORDS
     ]
+
+
+@app.get("/api/daily", response_model=DailyDraftResponse)
+def get_daily(date: str | None = None) -> DailyDraftResponse:
+    """Today's shared draft. `date` (YYYY-MM-DD) is accepted so a past day can
+    be reproduced; the day itself is always the server's UTC date."""
+    if date is None:
+        date_str = daily_engine.today_utc()
+    else:
+        try:
+            date_str = daily_engine.parse_date(date)
+        except ValueError:
+            raise HTTPException(
+                status_code=422, detail=f"Invalid date {date!r} — expected YYYY-MM-DD"
+            ) from None
+
+    league = load_league()
+    draft = daily_engine.build_daily(date_str, league.combos, list(FORMATIONS.keys()))
+    return DailyDraftResponse(
+        date=draft.date,
+        seed=draft.seed,
+        formation_id=draft.formation_id,
+        combos=draft.combos,
+    )
 
 
 @app.get("/api/squad/{team}/{season}", response_model=SquadResponse)

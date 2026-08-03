@@ -6,7 +6,7 @@ import { ShareCard } from "../components/ShareCard";
 import { addHistoryEntry } from "../game/history";
 import { toSlotAssignments, useDraftDispatch, useDraftState } from "../state/draftContext";
 
-export function ResultScreen() {
+export function ResultScreen({ onAgain, againLabel = "Draft again" }) {
   const state = useDraftState();
   const dispatch = useDraftDispatch();
   const [result, setResult] = useState(null);
@@ -41,15 +41,16 @@ export function ResultScreen() {
     if (!result || savedRef.current) return;
     savedRef.current = true;
     addHistoryEntry({
-      kind: "solo",
+      kind: state.mode === "daily" ? "daily" : "solo",
       mode: state.mode,
+      dailyDate: state.dailyDate,
       formationId: state.formation?.id,
       season: result.season,
       challenges: result.challenges,
       challengesAchieved: result.challengesAchieved,
       totalSpent: result.totalSpent,
     });
-  }, [result, state.mode, state.formation]);
+  }, [result, state.mode, state.formation, state.dailyDate]);
 
   if (error) {
     return (
@@ -58,9 +59,9 @@ export function ResultScreen() {
         <button
           type="button"
           className="result-screen__again"
-          onClick={() => dispatch({ type: "RESET" })}
+          onClick={() => (onAgain ? onAgain() : dispatch({ type: "RESET" }))}
         >
-          Draft again
+          {againLabel}
         </button>
       </div>
     );
@@ -86,9 +87,9 @@ export function ResultScreen() {
       <button
         type="button"
         className="result-screen__again"
-        onClick={() => dispatch({ type: "RESET" })}
+        onClick={() => (onAgain ? onAgain() : dispatch({ type: "RESET" }))}
       >
-        Draft again
+        {againLabel}
       </button>
     </div>
   );

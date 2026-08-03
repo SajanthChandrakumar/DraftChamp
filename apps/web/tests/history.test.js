@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { addHistoryEntry, clearHistory, loadHistory } from "../src/game/history";
+import {
+  addHistoryEntry,
+  clearHistory,
+  findDailyEntry,
+  loadHistory,
+} from "../src/game/history";
 
 /** Minimal in-memory Storage stand-in — Vitest's "node" environment has no
  * global localStorage, and this lets addHistoryEntry/loadHistory/clearHistory
@@ -59,6 +64,26 @@ describe("addHistoryEntry", () => {
     const entries = loadHistory(storage);
     expect(entries).toHaveLength(50);
     expect(entries[0].i).toBe(54);
+  });
+});
+
+describe("findDailyEntry", () => {
+  it("is null when that day has not been played", () => {
+    const storage = fakeStorage();
+    addHistoryEntry({ kind: "daily", dailyDate: "2026-08-02" }, storage);
+    expect(findDailyEntry("2026-08-03", storage)).toBeNull();
+  });
+
+  it("finds the entry for a played day", () => {
+    const storage = fakeStorage();
+    addHistoryEntry({ kind: "daily", dailyDate: "2026-08-03", challengesAchieved: 2 }, storage);
+    expect(findDailyEntry("2026-08-03", storage)).toMatchObject({ challengesAchieved: 2 });
+  });
+
+  it("ignores non-daily entries that happen to carry a date", () => {
+    const storage = fakeStorage();
+    addHistoryEntry({ kind: "solo", dailyDate: "2026-08-03" }, storage);
+    expect(findDailyEntry("2026-08-03", storage)).toBeNull();
   });
 });
 
