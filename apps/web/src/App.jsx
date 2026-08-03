@@ -6,12 +6,14 @@ import { DuelProvider } from "./state/duelContext";
 import { ModeSelectScreen } from "./screens/ModeSelectScreen";
 import { SoloFlow } from "./screens/SoloFlow";
 import { DuelFlow } from "./screens/DuelFlow";
+import { HistoryScreen } from "./screens/HistoryScreen";
 import "./App.css";
 
 export default function App() {
   const [gameData, setGameData] = useState(null);
   const [error, setError] = useState(null);
   const [mode, setMode] = useState(null);
+  const [showHistory, setShowHistory] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -65,8 +67,10 @@ export default function App() {
 
   return (
     <GameDataProvider value={gameData}>
-      {!mode ? (
-        <ModeSelectScreen onSelect={setMode} />
+      {showHistory ? (
+        <HistoryScreen onBack={() => setShowHistory(false)} />
+      ) : !mode ? (
+        <ModeSelectScreen onSelect={setMode} onShowHistory={() => setShowHistory(true)} />
       ) : mode === "duel" ? (
         <DuelProvider>
           <DuelFlow onBackToModes={() => setMode(null)} />

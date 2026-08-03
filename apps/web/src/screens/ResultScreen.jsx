@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { api, ApiError } from "../api/client";
 import { ChallengeList } from "../components/ChallengeList";
 import { ResultSummary } from "../components/ResultSummary";
 import { ShareCard } from "../components/ShareCard";
+import { addHistoryEntry } from "../game/history";
 import { toSlotAssignments, useDraftDispatch, useDraftState } from "../state/draftContext";
 
 export function ResultScreen() {
@@ -10,6 +11,7 @@ export function ResultScreen() {
   const dispatch = useDraftDispatch();
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
+  const savedRef = useRef(false);
 
   useEffect(() => {
     if (!state.formation) return;
@@ -34,6 +36,20 @@ export function ResultScreen() {
       cancelled = true;
     };
   }, [state.formation, state.filled, state.mode, state.budgetCap]);
+
+  useEffect(() => {
+    if (!result || savedRef.current) return;
+    savedRef.current = true;
+    addHistoryEntry({
+      kind: "solo",
+      mode: state.mode,
+      formationId: state.formation?.id,
+      season: result.season,
+      challenges: result.challenges,
+      challengesAchieved: result.challengesAchieved,
+      totalSpent: result.totalSpent,
+    });
+  }, [result, state.mode, state.formation]);
 
   if (error) {
     return (

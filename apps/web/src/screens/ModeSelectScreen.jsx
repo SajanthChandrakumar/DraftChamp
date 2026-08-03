@@ -1,6 +1,6 @@
 import { useGameData } from "../game/GameDataContext";
 
-export function ModeSelectScreen({ onSelect }) {
+export function ModeSelectScreen({ onSelect, onShowHistory }) {
   const { modes, records } = useGameData();
 
   return (
@@ -24,6 +24,9 @@ export function ModeSelectScreen({ onSelect }) {
           </button>
         ))}
       </div>
+      <button type="button" className="formation-picker__back" onClick={onShowHistory}>
+        View draft history
+      </button>
     </div>
   );
 }

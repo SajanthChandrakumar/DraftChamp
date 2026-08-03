@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { api, ApiError } from "../api/client";
+import { addHistoryEntry } from "../game/history";
 import { toSlotAssignments } from "../state/draftContext";
 import { useDuelDispatch, useDuelState } from "../state/duelContext";
 
@@ -8,6 +9,7 @@ export function DuelResultScreen() {
   const dispatch = useDuelDispatch();
   const [results, setResults] = useState(null);
   const [error, setError] = useState(null);
+  const savedRef = useRef(false);
 
   useEffect(() => {
     if (!state.formationA || !state.formationB) return;
@@ -38,6 +40,30 @@ export function DuelResultScreen() {
     };
   }, [state.formationA, state.formationB, state.filledA, state.filledB]);
 
+  // Points decide it; a tie on points falls to who broke more records.
+  const winner = useMemo(() => {
+    if (!results) return null;
+    const { a, b } = results;
+    if (a.season.points !== b.season.points) return a.season.points > b.season.points ? "A" : "B";
+    if (a.challengesAchieved !== b.challengesAchieved) {
+      return a.challengesAchieved > b.challengesAchieved ? "A" : "B";
+    }
+    return "draw";
+  }, [results]);
+
+  useEffect(() => {
+    if (!results || !winner || savedRef.current) return;
+    savedRef.current = true;
+    addHistoryEntry({
+      kind: "duel",
+      formationIdA: state.formationA?.id,
+      formationIdB: state.formationB?.id,
+      a: { season: results.a.season, challengesAchieved: results.a.challengesAchieved },
+      b: { season: results.b.season, challengesAchieved: results.b.challengesAchieved },
+      winner,
+    });
+  }, [results, winner, state.formationA, state.formationB]);
+
   if (error) {
     return (
       <div className="result-screen">
@@ -58,17 +84,6 @@ export function DuelResultScreen() {
   }
 
   const { a, b } = results;
-  // Points decide it; a tie on points falls to who broke more records.
-  const winner =
-    a.season.points !== b.season.points
-      ? a.season.points > b.season.points
-        ? "A"
-        : "B"
-      : a.challengesAchieved !== b.challengesAchieved
-        ? a.challengesAchieved > b.challengesAchieved
-          ? "A"
-          : "B"
-        : "draw";
 
   return (
     <div className="result-screen">
