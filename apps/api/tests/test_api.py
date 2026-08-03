@@ -106,6 +106,24 @@ class TestSimulate:
             1 for c in body["challenges"] if c["achieved"]
         )
 
+    def test_chemistry_is_included_and_internally_consistent(self, client, league, squad_of):
+        slots = build_valid_xi(league, squad_of)
+        response = client.post(
+            "/api/simulate", json={"formationId": "4-3-3", "slots": slots, "mode": "classic"}
+        )
+        chemistry = response.json()["chemistry"]
+
+        assert 0 <= chemistry["score"] <= 100
+        total_linked_pairs = (
+            chemistry["teammatePairs"] + chemistry["clubmatePairs"] + chemistry["countrymanPairs"]
+        )
+        assert total_linked_pairs <= 11 * 10 // 2
+        assert len(chemistry["highlights"]) <= total_linked_pairs
+        assert len(chemistry["highlights"]) <= 5
+        for link in chemistry["highlights"]:
+            assert link["kind"] in ("teammates", "clubmates", "countrymen")
+            assert link["slotA"] != link["slotB"]
+
     def test_same_xi_gives_the_same_result(self, client, league, squad_of):
         payload = {
             "formationId": "4-3-3",

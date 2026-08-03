@@ -13,13 +13,18 @@ import os
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.engine import daily as daily_engine
 from app.engine import records as records_engine
+from app.engine.chemistry import DraftedPlayer, compute_chemistry
 from app.engine.formations import FORMATIONS, POS_TO_FAM, eligible_families
 from app.engine.modes import DEFAULT_BUDGET_CAP, GAME_MODES
 from app.engine.simulation import simulate_season
 from app.league import load_league
 from app.models import (
     ChallengeResult,
+    ChemistryLink,
+    ChemistryResult,
+    DailyDraftResponse,
     Formation,
     FormationSlot,
     LeagueMeta,
@@ -130,6 +135,30 @@ def get_records() -> list[RecordInfo]:
     ]
 
 
+@app.get("/api/daily", response_model=DailyDraftResponse)
+def get_daily(date: str | None = None) -> DailyDraftResponse:
+    """Today's shared draft. `date` (YYYY-MM-DD) is accepted so a past day can
+    be reproduced; the day itself is always the server's UTC date."""
+    if date is None:
+        date_str = daily_engine.today_utc()
+    else:
+        try:
+            date_str = daily_engine.parse_date(date)
+        except ValueError:
+            raise HTTPException(
+                status_code=422, detail=f"Invalid date {date!r} — expected YYYY-MM-DD"
+            ) from None
+
+    league = load_league()
+    draft = daily_engine.build_daily(date_str, league.combos, list(FORMATIONS.keys()))
+    return DailyDraftResponse(
+        date=draft.date,
+        seed=draft.seed,
+        formation_id=draft.formation_id,
+        combos=draft.combos,
+    )
+
+
 @app.get("/api/squad/{team}/{season}", response_model=SquadResponse)
 def get_squad(team: str, season: int) -> SquadResponse:
     league = load_league()
@@ -231,6 +260,15 @@ def simulate(request: SimulateRequest) -> SimulateResponse:
     season = simulate_season(filled, request.formation_id)
     outcomes = records_engine.evaluate_all(season)
 
+    chemistry = compute_chemistry(
+        [
+            DraftedPlayer(
+                slot_id=a.slot_id, player=filled[a.slot_id], team=a.team, season=a.season
+            )
+            for a in request.slots
+        ]
+    )
+
     challenges = [
         ChallengeResult(
             id=o.record.id,
@@ -266,4 +304,21 @@ def simulate(request: SimulateRequest) -> SimulateResponse:
         challenges=challenges,
         challenges_achieved=sum(1 for c in challenges if c.achieved),
         total_spent=total_cost if request.mode == "budget" else None,
+        chemistry=ChemistryResult(
+            score=chemistry.score,
+            teammate_pairs=chemistry.teammate_pairs,
+            clubmate_pairs=chemistry.clubmate_pairs,
+            countryman_pairs=chemistry.countryman_pairs,
+            highlights=[
+                ChemistryLink(
+                    kind=link.kind,
+                    slot_a=link.slot_a,
+                    slot_b=link.slot_b,
+                    player_a_name=link.player_a_name,
+                    player_b_name=link.player_b_name,
+                    detail=link.detail,
+                )
+                for link in chemistry.highlights
+            ],
+        ),
     )

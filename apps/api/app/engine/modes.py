@@ -23,6 +23,11 @@ class GameModeInfo:
 
 GAME_MODES: list[GameModeInfo] = [
     GameModeInfo(
+        id="daily",
+        label="Daily Draft",
+        description="One shared puzzle a day — same formation, same reveals for everyone.",
+    ),
+    GameModeInfo(
         id="classic",
         label="Classic",
         description="Spin any club-season, draft your XI, see how the season plays out.",

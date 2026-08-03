@@ -27,6 +27,11 @@ SPECS: list[tuple[list[str], str]] = [
 ]
 
 
+# Cycled across each squad so chemistry tests see both matches (countrymen
+# within a squad) and misses (a squad's players spread across nationalities).
+NATIONALITIES = ["England", "France", "Spain", "Brazil"]
+
+
 def make_squad(start_id: int, overall_base: int) -> list[dict]:
     squad = []
     for i, (positions, label) in enumerate(SPECS):
@@ -39,6 +44,7 @@ def make_squad(start_id: int, overall_base: int) -> list[dict]:
                 "positions": positions,
                 "overall": overall,
                 "age": 24,
+                "nationality": NATIONALITIES[i % len(NATIONALITIES)],
                 "shirtNumber": pid % 99,
                 "marketValue": overall * 1_000_000,
                 "attributes": {

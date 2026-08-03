@@ -15,7 +15,18 @@ export function createInitialDraftState() {
     budgetCap: null,
     budgetSpent: 0,
     peakClubCode: null,
+    // Daily Draft replaces the random spin with a fixed run of reveals so
+    // everyone playing that day gets the same eleven picks to work with.
+    dailySequence: null,
+    dailyDate: null,
+    revealIndex: 0,
   };
+}
+
+/** The club-season the next spin lands on, or null when it should be random. */
+export function nextScriptedCombo(state) {
+  if (!state.dailySequence?.length) return null;
+  return state.dailySequence[state.revealIndex % state.dailySequence.length];
 }
 
 /** The XI in the shape the API expects. */
@@ -56,6 +67,8 @@ export function draftReducer(state, action) {
         mode: action.mode,
         budgetCap: action.budgetCap ?? null,
         peakClubCode: action.peakClubCode ?? null,
+        dailySequence: action.dailySequence ?? null,
+        dailyDate: action.dailyDate ?? null,
         phase: "spinning",
       };
 
@@ -65,6 +78,7 @@ export function draftReducer(state, action) {
         currentCombo: action.combo,
         currentSquad: action.squad,
         selectedPlayerId: null,
+        revealIndex: state.revealIndex + 1,
         phase: "drafting",
       };
 

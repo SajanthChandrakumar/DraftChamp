@@ -1,15 +1,18 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { api, ApiError } from "../api/client";
 import { ChallengeList } from "../components/ChallengeList";
+import { ChemistryCard } from "../components/ChemistryCard";
 import { ResultSummary } from "../components/ResultSummary";
 import { ShareCard } from "../components/ShareCard";
+import { addHistoryEntry } from "../game/history";
 import { toSlotAssignments, useDraftDispatch, useDraftState } from "../state/draftContext";
 
-export function ResultScreen() {
+export function ResultScreen({ onAgain, againLabel = "Draft again" }) {
   const state = useDraftState();
   const dispatch = useDraftDispatch();
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
+  const savedRef = useRef(false);
 
   useEffect(() => {
     if (!state.formation) return;
@@ -35,6 +38,21 @@ export function ResultScreen() {
     };
   }, [state.formation, state.filled, state.mode, state.budgetCap]);
 
+  useEffect(() => {
+    if (!result || savedRef.current) return;
+    savedRef.current = true;
+    addHistoryEntry({
+      kind: state.mode === "daily" ? "daily" : "solo",
+      mode: state.mode,
+      dailyDate: state.dailyDate,
+      formationId: state.formation?.id,
+      season: result.season,
+      challenges: result.challenges,
+      challengesAchieved: result.challengesAchieved,
+      totalSpent: result.totalSpent,
+    });
+  }, [result, state.mode, state.formation, state.dailyDate]);
+
   if (error) {
     return (
       <div className="result-screen">
@@ -42,9 +60,9 @@ export function ResultScreen() {
         <button
           type="button"
           className="result-screen__again"
-          onClick={() => dispatch({ type: "RESET" })}
+          onClick={() => (onAgain ? onAgain() : dispatch({ type: "RESET" }))}
         >
-          Draft again
+          {againLabel}
         </button>
       </div>
     );
@@ -61,6 +79,7 @@ export function ResultScreen() {
         challenges={result.challenges}
         achievedCount={result.challengesAchieved}
       />
+      <ChemistryCard chemistry={result.chemistry} />
       {result.totalSpent != null && (
         <p className="result-screen__spend">
           Squad cost: €{(result.totalSpent / 1_000_000).toFixed(1)}M
@@ -70,9 +89,9 @@ export function ResultScreen() {
       <button
         type="button"
         className="result-screen__again"
-        onClick={() => dispatch({ type: "RESET" })}
+        onClick={() => (onAgain ? onAgain() : dispatch({ type: "RESET" }))}
       >
-        Draft again
+        {againLabel}
       </button>
     </div>
   );

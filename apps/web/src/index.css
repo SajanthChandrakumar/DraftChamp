@@ -1,18 +1,34 @@
 :root {
-  /* Named palette — pitch green as the dominant ground, brass as the one
-     accent, chalk/ink as text. Values here are the dark-mode defaults. */
+  /* Named palette. The pitch itself (the mini-map component) always stays
+     its own fixed turf green regardless of theme — that's a literal
+     football pitch, not a background color. Everything else lives in a
+     deep slate-navy "stadium at night" ground, with brass as the one
+     warm accent. Values here are the dark-mode defaults. */
   --pitch-950: #0d1f16;
-  --surface: #1c3b2c;
-  --border: #2f5940;
+  --slate-950: #0a0d14;
+  --slate-900: #10141d;
+  --slate-800: rgba(30, 36, 52, 0.55);
+  --slate-border: rgba(148, 163, 196, 0.16);
   --turf-500: #3f7a58;
   --chalk-50: #f3f1e7;
   --ink-900: #16211b;
   --brass-500: #c8922f;
   --brass-600: #a8791f;
 
-  --bg: var(--pitch-950);
+  /* Casino accents — used sparingly and with intent, not as decoration:
+     neon for the "go" action and a strong player, pink only for the
+     celebratory moment of actually beating a record. Gold (brass, above)
+     stays reserved for the rare top-tier player. */
+  --neon-500: #39ff8a;
+  --neon-600: #1fd66d;
+  --pink-500: #ff3d81;
+
+  --bg: var(--slate-950);
+  --surface: var(--slate-800);
+  --border: var(--slate-border);
+  --glass-blur: blur(16px) saturate(140%);
   --text: var(--chalk-50);
-  --text-muted: #9fb8a8;
+  --text-muted: #9aa4bb;
   --accent: var(--brass-500);
   --accent-ink: #241804;
   --danger: #c9552f;
@@ -27,6 +43,13 @@
   --space-5: 24px;
   --space-6: 32px;
   --space-7: 48px;
+
+  /* Elevation: a black-tinted shadow reads fine on both the dark pitch-green
+     ground and the light chalk ground, so it doesn't need a per-theme swap. */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.16), 0 1px 1px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 12px 28px -10px rgba(0, 0, 0, 0.35), 0 2px 8px -2px rgba(0, 0, 0, 0.18);
+  --shadow-lg: 0 24px 48px -16px rgba(0, 0, 0, 0.45), 0 4px 12px -2px rgba(0, 0, 0, 0.2);
+  --glow-accent: 0 0 0 1px rgba(200, 146, 47, 0.22), 0 10px 32px -12px rgba(200, 146, 47, 0.45);
 
   color-scheme: dark;
   font-family: var(--font-body);
@@ -49,11 +72,11 @@
 }
 
 :root[data-theme="dark"] {
-  --bg: var(--pitch-950);
-  --surface: #1c3b2c;
-  --border: #2f5940;
+  --bg: var(--slate-950);
+  --surface: var(--slate-800);
+  --border: var(--slate-border);
   --text: var(--chalk-50);
-  --text-muted: #9fb8a8;
+  --text-muted: #9aa4bb;
   --accent-ink: #241804;
   color-scheme: dark;
 }
@@ -75,7 +98,40 @@
 body {
   margin: 0;
   min-height: 100svh;
-  background: var(--bg);
+  overflow-x: hidden;
+  background:
+    radial-gradient(900px 500px at 12% -8%, rgba(200, 146, 47, 0.14), transparent 60%),
+    radial-gradient(1000px 700px at 108% 8%, rgba(60, 90, 200, 0.22), transparent 55%),
+    repeating-linear-gradient(
+      115deg,
+      rgba(148, 163, 196, 0.035) 0,
+      rgba(148, 163, 196, 0.035) 2px,
+      transparent 2px,
+      transparent 34px
+    ),
+    var(--bg);
+  background-attachment: fixed;
+}
+
+/* ---------- Glass panels ----------
+   Every "card" in the app shares this treatment: a translucent slate
+   surface, blurred over whatever sits behind it (the body's glow/stripe
+   texture), rounded rather than sharp-edged. Buttons keep their angular
+   clip-path identity; this is for the data surfaces. */
+.record-progress,
+.chemistry-card,
+.player-card,
+.challenge,
+.history-entry,
+.mode-select__option,
+.draft-screen__banner,
+.duel-turn-banner,
+.club-picker__option,
+.chemistry-link,
+.daily-recap {
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border-radius: 14px;
 }
 
 #root {

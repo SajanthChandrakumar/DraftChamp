@@ -25,6 +25,7 @@ def make_player(pid: int, positions: list[str], overall: int) -> Player:
         positions=positions,
         overall=overall,
         age=25,
+        nationality="England",
         attributes=PlayerAttributes(
             pace=overall,
             shooting=overall,

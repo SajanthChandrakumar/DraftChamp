@@ -4,12 +4,19 @@ import { hasUsablePick, openSlotsFor, pickRandomCombo } from "../game/eligibilit
 import { useGameData } from "../game/GameDataContext";
 import { buildSpinReel } from "../game/spin";
 import { computeDraftStrength } from "../game/strength";
+import { computeChemistryScore } from "../game/chemistry";
+import { ChemistryMeter } from "../components/ChemistryMeter";
 import { ComboReveal } from "../components/ComboReveal";
 import { Pitch } from "../components/Pitch";
 import { PlayerCard } from "../components/PlayerCard";
 import { RatingScaler } from "../components/RatingScaler";
 import { RoundIndicator } from "../components/RoundIndicator";
-import { playersOf, useDraftDispatch, useDraftState } from "../state/draftContext";
+import {
+  nextScriptedCombo,
+  playersOf,
+  useDraftDispatch,
+  useDraftState,
+} from "../state/draftContext";
 
 const EMPTY_SQUAD = [];
 const SPIN_MIN_MS = 900;
@@ -57,6 +64,10 @@ export function DraftScreen() {
     () => computeDraftStrength(state.filled, state.formation),
     [state.filled, state.formation]
   );
+  const chemistryScore = useMemo(
+    () => computeChemistryScore(Object.values(state.filled)),
+    [state.filled]
+  );
   // Top-scorer tracks the same attack rating as most-scored, just at a lower
   // bar — showing it alongside the rest would just duplicate that bar, so
   // it's evaluated at the end like every other record but left off this list.
@@ -73,7 +84,8 @@ export function DraftScreen() {
   const handleSpin = async () => {
     setSpinError(null);
 
-    const combo = pickRandomCombo(comboPool);
+    // Daily Draft follows a fixed script; every other mode spins at random.
+    const combo = nextScriptedCombo(state) ?? pickRandomCombo(comboPool);
     const labelFor = (c) => `${league.teams.find((t) => t.code === c.team)?.name ?? c.team} ${c.season}`;
     setSpinReel(buildSpinReel(comboPool.map(labelFor), labelFor(combo)));
 
@@ -148,6 +160,7 @@ export function DraftScreen() {
               <RatingScaler key={r.id} record={r} currentStrength={draftStrength[r.strengthGroup]} />
             ))}
           </div>
+          <ChemistryMeter score={chemistryScore} />
           <ComboReveal
             combo={state.currentCombo}
             teamName={teamName}
@@ -180,13 +193,18 @@ export function DraftScreen() {
               })}
             </div>
           )}
-          <button
-            type="button"
-            className="formation-picker__back"
-            onClick={() => dispatch({ type: "RESET" })}
-          >
-            Restart this draft
-          </button>
+          {/* The Daily is one attempt at one shared puzzle — restarting it
+              would defeat the point, so that way out is only offered
+              in the modes you can replay freely. */}
+          {state.mode !== "daily" && (
+            <button
+              type="button"
+              className="formation-picker__back"
+              onClick={() => dispatch({ type: "RESET" })}
+            >
+              Restart this draft
+            </button>
+          )}
         </div>
       </div>
     </div>

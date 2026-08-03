@@ -40,6 +40,7 @@ export const api = {
   positionFamilies: () => request("/api/position-families"),
   modes: () => request("/api/modes"),
   records: () => request("/api/records"),
+  daily: () => request("/api/daily"),
   squad: (team, season) => request(`/api/squad/${encodeURIComponent(team)}/${season}`),
   simulate: (body) =>
     request("/api/simulate", {
