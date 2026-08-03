@@ -4,6 +4,8 @@ import { hasUsablePick, openSlotsFor, pickRandomCombo } from "../game/eligibilit
 import { useGameData } from "../game/GameDataContext";
 import { buildSpinReel } from "../game/spin";
 import { computeDraftStrength } from "../game/strength";
+import { computeChemistryScore } from "../game/chemistry";
+import { ChemistryMeter } from "../components/ChemistryMeter";
 import { ComboReveal } from "../components/ComboReveal";
 import { Pitch } from "../components/Pitch";
 import { PlayerCard } from "../components/PlayerCard";
@@ -61,6 +63,10 @@ export function DraftScreen() {
   const draftStrength = useMemo(
     () => computeDraftStrength(state.filled, state.formation),
     [state.filled, state.formation]
+  );
+  const chemistryScore = useMemo(
+    () => computeChemistryScore(Object.values(state.filled)),
+    [state.filled]
   );
   // Top-scorer tracks the same attack rating as most-scored, just at a lower
   // bar — showing it alongside the rest would just duplicate that bar, so
@@ -154,6 +160,7 @@ export function DraftScreen() {
               <RatingScaler key={r.id} record={r} currentStrength={draftStrength[r.strengthGroup]} />
             ))}
           </div>
+          <ChemistryMeter score={chemistryScore} />
           <ComboReveal
             combo={state.currentCombo}
             teamName={teamName}

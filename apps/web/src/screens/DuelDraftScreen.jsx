@@ -3,6 +3,8 @@ import { api } from "../api/client";
 import { hasUsablePick, openSlotsFor, pickRandomCombo } from "../game/eligibility";
 import { useGameData } from "../game/GameDataContext";
 import { buildSpinReel } from "../game/spin";
+import { computeChemistryScore } from "../game/chemistry";
+import { ChemistryMeter } from "../components/ChemistryMeter";
 import { ComboReveal } from "../components/ComboReveal";
 import { Pitch } from "../components/Pitch";
 import { PlayerCard } from "../components/PlayerCard";
@@ -40,6 +42,12 @@ export function DuelDraftScreen() {
     if (!activeFormation) return false;
     return hasUsablePick(available, activeFormation, activePlayers, null);
   }, [available, activeFormation, activePlayers]);
+
+  const activeFilledEntries = state.turn === "A" ? state.filledA : state.filledB;
+  const chemistryScore = useMemo(
+    () => computeChemistryScore(Object.values(activeFilledEntries)),
+    [activeFilledEntries]
+  );
 
   const handleSpin = async () => {
     setSpinError(null);
@@ -91,6 +99,7 @@ export function DuelDraftScreen() {
           }}
         />
         <div className="draft-screen__side">
+          <ChemistryMeter score={chemistryScore} />
           <ComboReveal
             combo={state.currentCombo}
             teamName={teamName}

@@ -49,6 +49,7 @@ class Player(BaseModel):
     positions: list[Position]
     overall: int
     age: int
+    nationality: str
     shirt_number: int | None = Field(default=None, alias="shirtNumber")
     market_value: int | None = Field(default=None, alias="marketValue")
     attributes: PlayerAttributes
@@ -186,10 +187,38 @@ class SeasonResult(BaseModel):
     model_config = {"populate_by_name": True}
 
 
+ChemistryLinkKind = Literal["teammates", "clubmates", "countrymen"]
+
+
+class ChemistryLink(BaseModel):
+    """One real-world connection between two drafted players, used to explain
+    a chemistry score rather than leave it as an opaque number."""
+
+    kind: ChemistryLinkKind
+    slot_a: str = Field(serialization_alias="slotA")
+    slot_b: str = Field(serialization_alias="slotB")
+    player_a_name: str = Field(serialization_alias="playerAName")
+    player_b_name: str = Field(serialization_alias="playerBName")
+    detail: str
+
+    model_config = {"populate_by_name": True}
+
+
+class ChemistryResult(BaseModel):
+    score: int
+    teammate_pairs: int = Field(serialization_alias="teammatePairs")
+    clubmate_pairs: int = Field(serialization_alias="clubmatePairs")
+    countryman_pairs: int = Field(serialization_alias="countrymanPairs")
+    highlights: list[ChemistryLink]
+
+    model_config = {"populate_by_name": True}
+
+
 class SimulateResponse(BaseModel):
     season: SeasonResult
     challenges: list[ChallengeResult]
     challenges_achieved: int = Field(serialization_alias="challengesAchieved")
     total_spent: int | None = Field(default=None, serialization_alias="totalSpent")
+    chemistry: ChemistryResult
 
     model_config = {"populate_by_name": True}

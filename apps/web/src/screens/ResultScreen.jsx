@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { api, ApiError } from "../api/client";
 import { ChallengeList } from "../components/ChallengeList";
+import { ChemistryCard } from "../components/ChemistryCard";
 import { ResultSummary } from "../components/ResultSummary";
 import { ShareCard } from "../components/ShareCard";
 import { addHistoryEntry } from "../game/history";
@@ -78,6 +79,7 @@ export function ResultScreen({ onAgain, againLabel = "Draft again" }) {
         challenges={result.challenges}
         achievedCount={result.challengesAchieved}
       />
+      <ChemistryCard chemistry={result.chemistry} />
       {result.totalSpent != null && (
         <p className="result-screen__spend">
           Squad cost: €{(result.totalSpent / 1_000_000).toFixed(1)}M

@@ -58,8 +58,16 @@ export function DuelResultScreen() {
       kind: "duel",
       formationIdA: state.formationA?.id,
       formationIdB: state.formationB?.id,
-      a: { season: results.a.season, challengesAchieved: results.a.challengesAchieved },
-      b: { season: results.b.season, challengesAchieved: results.b.challengesAchieved },
+      a: {
+        season: results.a.season,
+        challengesAchieved: results.a.challengesAchieved,
+        chemistry: results.a.chemistry,
+      },
+      b: {
+        season: results.b.season,
+        challengesAchieved: results.b.challengesAchieved,
+        chemistry: results.b.chemistry,
+      },
       winner,
     });
   }, [results, winner, state.formationA, state.formationB]);
@@ -103,6 +111,7 @@ export function DuelResultScreen() {
           <span className="duel-result__records">
             {a.challengesAchieved} record{a.challengesAchieved === 1 ? "" : "s"} broken
           </span>
+          <span className="duel-result__chemistry">Chemistry {a.chemistry.score}/100</span>
         </div>
         <div className="duel-result__vs">vs</div>
         <div className="duel-result__side">
@@ -116,6 +125,7 @@ export function DuelResultScreen() {
           <span className="duel-result__records">
             {b.challengesAchieved} record{b.challengesAchieved === 1 ? "" : "s"} broken
           </span>
+          <span className="duel-result__chemistry">Chemistry {b.chemistry.score}/100</span>
         </div>
       </div>
       <button

@@ -152,6 +152,7 @@ def build_squads(players_csv: Path) -> dict[str, list[dict]]:
                 "positions": [p.strip() for p in row["player_positions"].split(",")],
                 "overall": overall,
                 "age": parse_int(row["age"]),
+                "nationality": row["nationality_name"],
                 "shirtNumber": parse_int(row["club_jersey_number"]),
                 "marketValue": parse_int(row["value_eur"]),
                 "attributes": attributes,
