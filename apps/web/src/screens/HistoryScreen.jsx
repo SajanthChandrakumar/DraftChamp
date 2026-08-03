@@ -1,5 +1,40 @@
 import { useState } from "react";
+import { computeStreak, loadPlayedDates, summarise } from "../game/dailyStats";
 import { clearHistory, loadHistory } from "../game/history";
+
+function StatTile({ label, value, hint }) {
+  return (
+    <div className="stat-tile">
+      <span className="stat-tile__value">{value}</span>
+      <span className="stat-tile__label">{label}</span>
+      {hint && <span className="stat-tile__hint">{hint}</span>}
+    </div>
+  );
+}
+
+/** The reason to come back: progress you can see accumulating. */
+function StatsPanel({ entries }) {
+  const stats = summarise(entries);
+  const today = new Date().toISOString().slice(0, 10);
+  const streak = computeStreak(loadPlayedDates(), today);
+
+  return (
+    <div className="stats-panel">
+      <StatTile
+        label="Current streak"
+        value={streak.current > 0 ? `🔥 ${streak.current}` : "—"}
+        hint={streak.best > 0 ? `best ${streak.best}` : null}
+      />
+      <StatTile label="Drafts played" value={stats.drafts} hint={`${stats.dailies} daily`} />
+      <StatTile label="Records broken" value={stats.recordsBroken} />
+      <StatTile
+        label="Best season"
+        value={stats.bestPoints != null ? `${stats.bestPoints} pts` : "—"}
+        hint={stats.bestTier}
+      />
+    </div>
+  );
+}
 
 function formatDate(iso) {
   return new Date(iso).toLocaleString(undefined, {
@@ -69,6 +104,7 @@ export function HistoryScreen({ onBack }) {
         <p className="history-screen__empty">No drafts yet — play a season and it'll show up here.</p>
       ) : (
         <>
+          <StatsPanel entries={entries} />
           <ul className="history-screen__list">
             {entries.map((entry) => (
               <li key={entry.id} className="history-entry">

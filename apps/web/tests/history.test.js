@@ -56,14 +56,14 @@ describe("addHistoryEntry", () => {
     expect(entries[1].mode).toBe("classic");
   });
 
-  it("caps history at 50 entries", () => {
+  it("caps history at 200 entries, keeping the newest", () => {
     const storage = fakeStorage();
-    for (let i = 0; i < 55; i++) {
+    for (let i = 0; i < 205; i++) {
       addHistoryEntry({ kind: "solo", mode: "classic", i }, storage);
     }
     const entries = loadHistory(storage);
-    expect(entries).toHaveLength(50);
-    expect(entries[0].i).toBe(54);
+    expect(entries).toHaveLength(200);
+    expect(entries[0].i).toBe(204);
   });
 });
 

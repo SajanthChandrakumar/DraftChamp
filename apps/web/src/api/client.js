@@ -40,7 +40,8 @@ export const api = {
   positionFamilies: () => request("/api/position-families"),
   modes: () => request("/api/modes"),
   records: () => request("/api/records"),
-  daily: () => request("/api/daily"),
+  /** Omit `date` for today; pass YYYY-MM-DD to replay a day from the archive. */
+  daily: (date) => request(date ? `/api/daily?date=${encodeURIComponent(date)}` : "/api/daily"),
   squad: (team, season) => request(`/api/squad/${encodeURIComponent(team)}/${season}`),
   simulate: (body) =>
     request("/api/simulate", {

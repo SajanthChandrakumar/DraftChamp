@@ -5,7 +5,10 @@
  */
 
 const STORAGE_KEY = "draftchamp:history";
-const MAX_ENTRIES = 50;
+// Deep enough to make the stats dashboard meaningful. Each entry is ~1-2 KB,
+// so 200 sits well inside the ~5 MB localStorage budget. Daily streaks are
+// tracked separately in `dailyStats.js` precisely so this cap can't erase them.
+const MAX_ENTRIES = 200;
 
 function readAll(storage) {
   try {

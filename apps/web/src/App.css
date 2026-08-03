@@ -1743,6 +1743,151 @@
   background: var(--surface);
 }
 
+.daily-banner__streak {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--accent);
+}
+
+/* ---------- Streak, stats, archive ---------- */
+
+.streak-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  margin: 0;
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid rgba(200, 146, 47, 0.4);
+  border-radius: 999px;
+  background: rgba(200, 146, 47, 0.1);
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.streak-banner__flame {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.stats-panel {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: var(--space-3);
+  width: 100%;
+}
+
+.stat-tile {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.stat-tile__value {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 24px;
+  font-variant-numeric: tabular-nums;
+  color: var(--accent);
+}
+
+.stat-tile__label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.stat-tile__hint {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.archive {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: 100%;
+  max-width: 520px;
+}
+
+.archive__label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.archive__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(72px, 1fr));
+  gap: var(--space-2);
+}
+
+.archive__day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: var(--space-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.archive__day:not(:disabled):hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+/* Played days stay legible rather than being greyed into noise — the record
+   is the point of the archive, not just the fact that it's closed. */
+.archive__day--played {
+  border-color: rgba(200, 146, 47, 0.35);
+  cursor: default;
+}
+
+.archive__day-date {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.archive__day-result {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+.archive__day--played .archive__day-result {
+  color: var(--accent);
+}
+
+.share-card__preview {
+  margin: 0;
+  padding: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 13px;
+  line-height: 1.5;
+  text-align: center;
+  white-space: pre-wrap;
+}
+
 .daily-recap {
   display: flex;
   flex-direction: column;
