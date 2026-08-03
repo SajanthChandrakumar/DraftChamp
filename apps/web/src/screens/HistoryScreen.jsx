@@ -60,10 +60,7 @@ export function HistoryScreen({ onBack }) {
   return (
     <div className="history-screen">
       <div className="history-screen__header">
-        <div>
-          <span className="mode-select__eyebrow">DraftChamp</span>
-          <h1 className="history-screen__title">Draft history</h1>
-        </div>
+        <h1 className="history-screen__title">Draft history</h1>
         <button type="button" className="formation-picker__back" onClick={onBack}>
           Back
         </button>

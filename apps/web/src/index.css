@@ -28,6 +28,13 @@
   --space-6: 32px;
   --space-7: 48px;
 
+  /* Elevation: a black-tinted shadow reads fine on both the dark pitch-green
+     ground and the light chalk ground, so it doesn't need a per-theme swap. */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.16), 0 1px 1px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 12px 28px -10px rgba(0, 0, 0, 0.35), 0 2px 8px -2px rgba(0, 0, 0, 0.18);
+  --shadow-lg: 0 24px 48px -16px rgba(0, 0, 0, 0.45), 0 4px 12px -2px rgba(0, 0, 0, 0.2);
+  --glow-accent: 0 0 0 1px rgba(200, 146, 47, 0.22), 0 10px 32px -12px rgba(200, 146, 47, 0.45);
+
   color-scheme: dark;
   font-family: var(--font-body);
   font-size: 16px;
@@ -75,7 +82,18 @@
 body {
   margin: 0;
   min-height: 100svh;
-  background: var(--bg);
+  background:
+    radial-gradient(900px 500px at 12% -8%, rgba(200, 146, 47, 0.12), transparent 60%),
+    radial-gradient(1000px 700px at 108% 8%, rgba(63, 122, 88, 0.22), transparent 55%),
+    repeating-linear-gradient(
+      115deg,
+      rgba(127, 127, 127, 0.03) 0,
+      rgba(127, 127, 127, 0.03) 2px,
+      transparent 2px,
+      transparent 34px
+    ),
+    var(--bg);
+  background-attachment: fixed;
 }
 
 #root {
